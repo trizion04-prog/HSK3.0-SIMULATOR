@@ -1,20 +1,22 @@
-# HSK 3.0 Simulator
+# HSK Simulator
 
-Simulasi ujian HSK 3: 70 soal, sekitar 83 menit.
+Simulasi ujian HSK online dengan timer, audio listening, dan penilaian otomatis.
 
-- **听力 Mendengarkan**: soal 1–30, audio diputar sekali
-- **阅读 Membaca**: soal 31–60, 30 menit
-- **书写 Menulis**: soal 61–70
+| Halaman | Isi |
+|---|---|
+| `index.html` | Halaman pembuka: pilih level |
+| `hsk3/` | HSK 3: 70 soal, sekitar 83 menit |
+| `hsk5/` | HSK 5: 72 soal, sekitar 105 menit (audio `listening.mp3`, gambar di `img/`) |
 
-Semua isi ujian (soal, gambar, dan audio) ada di satu file `index.html`, jadi tidak perlu instalasi apa pun.
+## Hasil peserta
 
-## Cara menjalankan
+Setiap peserta mengisi nama sebelum mulai. Saat ujian selesai, hasilnya dikirim ke **Netlify Forms**:
+- `hasil-hsk3` untuk HSK 3
+- `hasil-hsk5` untuk HSK 5
 
-Buka `index.html` di browser.
+Hasilnya bisa dilihat di dashboard Netlify, menu **Forms**. Form detection harus aktif.
 
-## Online lewat GitHub Pages
+## Menjalankan di komputer
 
-1. Buka **Settings → Pages** di repo ini.
-2. Di **Source**, pilih **Deploy from a branch**, lalu pilih branch `main` dan folder `/ (root)`.
-3. Klik **Save**. Setelah sekitar satu menit, situsnya bisa dibuka di
-   `https://trizion04-prog.github.io/HSK3.0-SIMULATOR/`.
+Jalankan server lokal dari folder ini, misalnya `python3 -m http.server`, lalu buka `http://localhost:8000`.
+Pengiriman hasil hanya berfungsi setelah situsnya di-deploy di Netlify.
