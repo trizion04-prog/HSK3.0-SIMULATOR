@@ -114,9 +114,11 @@ for(let n=61;n<=70;n++){const tr=$('#r'+n);tr.className=ok(n)?'r-ok':'r-no';if(n
 function result(){stage=3;let rows='';
 for(let n=1;n<=70;n++){const a=n>60?esc(A[n]||'–'):(A[n]||'–'),k=esc(KEY[n]);
 rows+=`<tr id="r${n}" class="${ok(n)?'r-ok':'r-no'}"><td>${n}</td><td class="zh">${a}</td><td class="zh">${k}</td><td>${n>65?`<label><input type="checkbox" data-m="${n}"> Sesuai</label>`:ok(n)?'Benar':'Salah'}</td></tr>`}
-app.innerHTML=`<section class="paper"><h2>Hasil ujian</h2><div class="sum" id="sum"></div><p class="note">Skor 100 per bagian adalah perkiraan sederhana (jumlah benar dibagi jumlah soal), bukan konversi resmi HSK. Soal 66–70 dinilai oleh guru: bandingkan kalimat siswa dengan jawaban referensi di tabel, lalu centang “Sesuai” jika benar. Skor Menulis ikut berubah sesuai centang.</p></section>
+app.innerHTML=`<section class="paper" id="res"><h2>Hasil ujian</h2><div class="sum" id="sum"></div><p class="note">Skor 100 per bagian adalah perkiraan sederhana (jumlah benar dibagi jumlah soal), bukan konversi resmi HSK. Soal 66–70 dinilai oleh guru: bandingkan kalimat siswa dengan jawaban referensi di tabel, lalu centang “Sesuai” jika benar. Skor Menulis ikut berubah sesuai centang.</p></section>
 <section class="paper"><h2>Lembar jawaban 1–70</h2><div class="tw"><table><thead><tr><th>No</th><th>Jawabanmu</th><th>Kunci</th><th>Hasil</th></tr></thead><tbody>${rows}</tbody></table></div><p><button class="go" onclick="location.reload()">Ulangi ujian</button></p></section>`;
-sumUp();scrollTo(0,0);send()}
+sumUp();scrollTo(0,0);send();
+const st=s=>String(s||'').replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+HSKLog.render($('#res'),{level:'HSK 3',name:U.nama,items:Array.from({length:65},(_,i)=>i+1).filter(n=>!ok(n)).map(n=>({q:n,section:n<=30?'Mendengarkan':n<=60?'Membaca':'Menulis',text:st(Q[n-1]&&(Q[n-1].text||Q[n-1].pre)),my:(A[n]||'').trim(),key:KEY[n]}))})}
 function send(){const t1=Date.now(),c1=cnt(1,30),c2=cnt(31,60),c3=cnt(61,65),
 d={'form-name':'hasil-hsk3',nama:U.nama,kontak:U.kontak,mendengarkan:c1+'/30',membaca:c2+'/30',menulis_61_65:c3+'/5',
 total_otomatis:(c1+c2+c3)+'/65',mulai:new Date(T0).toLocaleString('id-ID'),selesai:new Date(t1).toLocaleString('id-ID'),
@@ -128,5 +130,6 @@ fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlenco
 .then(r=>{if(!r.ok)throw 0;m.textContent='✓ Hasil sudah terkirim ke guru.';m.style.color='var(--ok)'})
 .catch(()=>{m.textContent='Hasil gagal terkirim. Screenshot halaman ini dan kirim ke guru.';m.style.color='var(--red)'})}
 intro();
-</script><script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
+</script><script src="/log.js"></script>
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
 </body></html>

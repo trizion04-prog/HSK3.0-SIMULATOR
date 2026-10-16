@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Log Kesalahan</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0e5a63">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9edf1;--paper:#fff;--ink:#17212b;--mute:#5b6773;--line:#c8d0d8;--on:#0e5a63;--onbg:#dff0f2;--red:#b42318;--ok:#1b7a3d;--due:#fff4d6;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161c;--paper:#18212a;--ink:#e8edf1;--mute:#9aa7b3;--line:#33404c;--on:#5cc4cf;--onbg:#173238;--red:#ff8a7a;--ok:#6fd08c;--due:#3a3216}}
+:root[data-theme="dark"]{--bg:#10161c;--paper:#18212a;--ink:#e8edf1;--mute:#9aa7b3;--line:#33404c;--on:#5cc4cf;--onbg:#173238;--red:#ff8a7a;--ok:#6fd08c;--due:#3a3216}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Public Sans",system-ui,sans-serif}
+.zh{font-family:"Noto Serif SC","Songti SC","SimSun",serif}
+main{max-width:1000px;margin:0 auto;padding:20px 16px 60px}
+a{color:var(--on)}
+h1{margin:.3em 0 .1em}.note{color:var(--mute);margin:0 0 14px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0}
+.bar select,.bar button{font:inherit;border-radius:6px;padding:8px 12px;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.bar .p{background:var(--on);border-color:var(--on);color:var(--paper);font-weight:700;cursor:pointer}
+.bar .d{color:var(--red);cursor:pointer}
+.stats{display:flex;flex-wrap:wrap;gap:10px}.stat{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:8px 14px}.stat b{font-size:1.4rem;display:block}
+.tw{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:6px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{white-space:nowrap;font-size:.8rem;color:var(--mute)}
+td:nth-child(1),td:nth-child(2),td:nth-child(9){white-space:nowrap}
+tr.due td{background:var(--due)}td.x button{border:0;background:none;color:var(--red);cursor:pointer;font:inherit}
+.empty{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;text-align:center;color:var(--mute)}
+:focus-visible{outline:3px solid var(--on);outline-offset:2px}
+</style></head><body>
+<form name="log-kesalahan" data-netlify="true" netlify-honeypot="bot-field" hidden><input name="bot-field"><input name="nama"><input name="level"><input name="tanggal"><input name="jumlah"><textarea name="csv"></textarea></form>
+<main>
+<a href="/">← Kembali ke pilih level</a>
+<h1>Log kesalahan</h1>
+<p class="note">Semua soal yang salah dan sudah kamu simpan dari halaman hasil ujian. Log ini tersimpan di perangkat ini saja. Unduh CSV untuk menyimpan cadangan atau membukanya di Excel atau Google Sheets.</p>
+<div class="stats" id="stats"></div>
+<div class="bar"><label>Level <select id="lv"><option value="">Semua</option></select></label>
+<label><input type="checkbox" id="due"> Hanya yang waktunya review</label>
+<button class="p" id="csv" type="button">Unduh CSV</button><button class="d" id="clr" type="button">Hapus semua</button></div>
+<div id="out"></div>
+</main>
+<script src="/log.js"></script>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const today=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const isDue=r=>r.review_date&&r.review_date<=today;
+function view(){const all=HSKLog.load().map((r,i)=>({...r,_i:i}));
+const lv=$('#lv'),cur=lv.value,levels=[...new Set(all.map(r=>r.level))].sort();
+lv.innerHTML='<option value="">Semua</option>'+levels.map(l=>`<option${l==cur?' selected':''}>${esc(l)}</option>`).join('');
+let rows=all.filter(r=>(!lv.value||r.level==lv.value)&&(!$('#due').checked||isDue(r)));
+rows.sort((a,b)=>(a.review_date||'9').localeCompare(b.review_date||'9')||b.date.localeCompare(a.date));
+$('#stats').innerHTML=`<div class="stat"><b>${all.length}</b>catatan</div><div class="stat"><b>${all.filter(isDue).length}</b>waktunya review</div><div class="stat"><b>${levels.length}</b>level</div>`;
+if(!rows.length){$('#out').innerHTML=`<div class="empty">${all.length?'Tidak ada catatan untuk filter ini.':'Belum ada catatan. Selesaikan satu ujian, lalu tekan <b>Simpan ke log</b> di halaman hasil.'}</div>`;return rows}
+$('#out').innerHTML=`<div class="tw"><table><thead><tr>${HSKLog.COLS.map(c=>`<th>${c}</th>`).join('')}<th></th></tr></thead><tbody>${rows.map(r=>`<tr class="${isDue(r)?'due':''}">${HSKLog.COLS.map(c=>`<td class="${c=='question'?'zh':''}">${esc(r[c])}</td>`).join('')}<td class="x"><button data-i="${r._i}" title="Hapus catatan ini">✕</button></td></tr>`).join('')}</tbody></table></div>`;
+return rows}
+$('#lv').onchange=view;$('#due').onchange=view;
+$('#csv').onclick=()=>{const r=view();if(r.length)HSKLog.download(r.map(({_i,...x})=>x),`hsk-log-${today}.csv`)};
+$('#clr').onclick=()=>{if(confirm('Hapus semua catatan di perangkat ini? Ini tidak bisa dibatalkan.')){HSKLog.save([]);view()}};
+$('#out').onclick=e=>{const i=e.target.dataset.i;if(i==null)return;const a=HSKLog.load();a.splice(+i,1);HSKLog.save(a);view()};
+view();
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+</script>
+</body></html>

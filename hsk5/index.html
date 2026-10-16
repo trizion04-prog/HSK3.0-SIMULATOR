@@ -143,11 +143,12 @@ const cnt=(a,b)=>{let c=0;for(let n=a;n<=b;n++)if(ok(n))c++;return c};
 function result(){stage=3;const c1=cnt(1,35),c2=cnt(36,70);let rows='';
 for(let n=1;n<=70;n++)rows+=`<tr class="${ok(n)?'r-ok':'r-no'}"><td>${n}</td><td>${A[n]||'–'}</td><td>${k(n)}</td><td>${ok(n)?'Benar':'Salah'}</td></tr>`;
 const es=n=>`<h3 class="zh">第 ${n} 题 · ${zc(A[n]||'')} karakter</h3><div class="ess zh">${esc((A[n]||'').trim()||'–')}</div>`;
-app.innerHTML=`<section class="paper"><h2>Hasil ujian</h2><div class="sum" id="sum"><div class="card"><span class="zh">听力 Mendengarkan</span><b>${c1}/35</b>${Math.round(c1/35*100)}%</div><div class="card"><span class="zh">阅读 Membaca</span><b>${c2}/35</b>${Math.round(c2/35*100)}%</div><div class="card"><span class="zh">写作 Menulis</span><b>–</b>dinilai guru</div></div>
+app.innerHTML=`<section class="paper" id="res"><h2>Hasil ujian</h2><div class="sum" id="sum"><div class="card"><span class="zh">听力 Mendengarkan</span><b>${c1}/35</b>${Math.round(c1/35*100)}%</div><div class="card"><span class="zh">阅读 Membaca</span><b>${c2}/35</b>${Math.round(c2/35*100)}%</div><div class="card"><span class="zh">写作 Menulis</span><b>–</b>dinilai guru</div></div>
 <p class="note">Persentase adalah perkiraan sederhana (jumlah benar dibagi jumlah soal), bukan konversi skor resmi HSK. Karangan 71–72 dinilai oleh guru.</p></section>
 <section class="paper"><h2>Karangan</h2>${es(71)}${es(72)}</section>
 <section class="paper"><h2>Lembar jawaban 1–70</h2><div class="tw"><table><thead><tr><th>No</th><th>Jawabanmu</th><th>Kunci</th><th>Hasil</th></tr></thead><tbody>${rows}</tbody></table></div><p><button class="go" onclick="location.reload()">Ulangi ujian</button></p></section>`;
-scrollTo(0,0);send(c1,c2)}
+scrollTo(0,0);send(c1,c2);
+HSKLog.render($('#res'),{level:'HSK 5',name:U.nama,items:R(1,70).filter(n=>!ok(n)).map(n=>({q:n,section:(n<=35?'Mendengarkan':'Membaca')+' · Bagian '+(n<=19?1:n<=35?2:n<=45?1:n<=55?2:3),text:n>35&&RQ[n]?RQ[n][0]:'',my:A[n],key:k(n)}))})}
 function send(c1,c2){const t1=Date.now(),
 d={'form-name':'hasil-hsk5',nama:U.nama,kontak:U.kontak,mendengarkan:c1+'/35',membaca:c2+'/35',total_otomatis:(c1+c2)+'/70',
 mulai:new Date(T0).toLocaleString('id-ID'),selesai:new Date(t1).toLocaleString('id-ID'),durasi_menit:String(Math.round((t1-T0)/60000)),
@@ -157,5 +158,6 @@ fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlenco
 .then(r=>{if(!r.ok)throw 0;m.textContent='✓ Hasil sudah terkirim ke guru.';m.style.color='var(--ok)'})
 .catch(()=>{m.textContent='Hasil gagal terkirim. Screenshot halaman ini dan kirim ke guru.';m.style.color='var(--red)'})}
 intro();
-</script><script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
+</script><script src="/log.js"></script>
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
 </body></html>
