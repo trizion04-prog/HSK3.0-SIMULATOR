@@ -8,6 +8,7 @@ Simulasi ujian HSK online dengan timer, audio listening, dan penilaian otomatis.
 | `hsk1/` | HSK 1: 40 soal, sekitar 36 menit, dengan pinyin |
 | `hsk2/` | HSK 2: 60 soal, sekitar 56 menit, dengan pinyin |
 | `hsk3/` | HSK 3: 70 soal, sekitar 83 menit |
+| `hsk4/` | HSK 4: 70 soal, sekitar 81 menit |
 | `hsk5/` | HSK 5: 72 soal, sekitar 105 menit (audio `listening.mp3`, gambar di `img/`) |
 | `log/` | Log kesalahan dari semua level, bisa diunduh sebagai CSV |
 
@@ -17,6 +18,7 @@ Setiap peserta mengisi nama sebelum mulai. Saat ujian selesai, hasilnya dikirim 
 - `hasil-hsk1` untuk HSK 1
 - `hasil-hsk2` untuk HSK 2
 - `hasil-hsk3` untuk HSK 3
+- `hasil-hsk4` untuk HSK 4
 - `hasil-hsk5` untuk HSK 5
 
 Hasilnya bisa dilihat di dashboard Netlify, menu **Forms**. Form detection harus aktif.
@@ -41,4 +43,4 @@ Di halaman hasil setiap ujian, semua soal yang salah masuk ke daftar **Log kesal
 - Log disimpan di perangkat peserta (`localStorage`, kunci `hsk-log`) dan bisa dilihat di `/log/`.
 - Salinannya juga dikirim ke Netlify Forms dengan nama `log-kesalahan`.
 - Kolom CSV: `date,level,section,question,my_answer,correct_answer,why_I_missed_it,what_to_review,review_date`
-- Kode bersama ada di `log.js`. Soal Menulis yang dinilai guru (HSK 3 nomor 66–70 dan karangan HSK 5) tidak masuk log otomatis.
+- Kode bersama ada di `log.js`. Soal Menulis yang dinilai guru (HSK 3 nomor 66–70, HSK 4 nomor 65–70, dan karangan HSK 5) tidak masuk log otomatis.

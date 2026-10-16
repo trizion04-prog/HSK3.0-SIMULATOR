@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HSK 4 Mock Test</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0e5a63">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HSK Simulator">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9edf1;--paper:#fff;--ink:#17212b;--mute:#5b6773;--line:#c8d0d8;--on:#0e5a63;--onbg:#dff0f2;--red:#b42318;--ok:#1b7a3d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161c;--paper:#18212a;--ink:#e8edf1;--mute:#9aa7b3;--line:#33404c;--on:#5cc4cf;--onbg:#173238;--red:#ff8a7a;--ok:#6fd08c}}
+:root[data-theme="dark"]{--bg:#10161c;--paper:#18212a;--ink:#e8edf1;--mute:#9aa7b3;--line:#33404c;--on:#5cc4cf;--onbg:#173238;--red:#ff8a7a;--ok:#6fd08c}
+html{scroll-padding-top:150px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Public Sans",system-ui,sans-serif}
+.zh{font-family:"Noto Serif SC","Songti SC","SimSun",serif}
+main{max-width:820px;margin:0 auto;padding:12px 12px 60px}
+.paper{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px 22px;margin:12px 0}
+.cover{text-align:center;padding:40px 22px}
+.cover h1{font-size:3rem;margin:.2em 0;letter-spacing:.08em}
+.cover ol{text-align:left;max-width:540px;margin:20px auto}
+.seal{display:inline-block;border:2px solid var(--red);color:var(--red);padding:2px 10px;border-radius:4px;font-weight:700}
+.back{display:inline-block;margin-bottom:8px;color:var(--on)}
+button{font:inherit;cursor:pointer}
+.go{background:var(--on);color:var(--paper);border:0;border-radius:6px;padding:12px 28px;font-weight:700}
+.go:disabled{opacity:.45;cursor:not-allowed}
+.who{max-width:420px;margin:0 auto 18px;text-align:left;display:grid;gap:10px}.who label{display:grid;gap:4px;font-weight:600}.who input{font:inherit;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:2px solid var(--on);padding:8px 12px}
+.bar .row{max-width:820px;margin:0 auto;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.bar .nm{flex:1;min-width:140px}.bar small{display:block;color:var(--mute)}
+.tm{font:700 1.9rem/1 "Public Sans",sans-serif;font-variant-numeric:tabular-nums}.tm.low{color:var(--red)}
+.fin{background:none;border:1px solid var(--line);color:var(--ink);border-radius:6px;padding:6px 12px}
+.chips{max-width:820px;margin:6px auto 0;display:flex;flex-wrap:wrap;gap:4px}
+.chip{min-width:30px;height:26px;border:1px solid var(--line);background:none;color:var(--mute);border-radius:4px;font-size:.8rem;padding:0}
+.chip.done{background:var(--on);border-color:var(--on);color:var(--paper)}
+.blk h2{margin:0 0 4px;font-size:1.15rem}.note{color:var(--mute);margin:0 0 10px}
+.pass{margin:10px 0;padding:12px 16px;background:var(--bg);border-radius:6px;line-height:1.95}
+.pass p{margin:0 0 .6em;text-indent:2em}.pass p:last-child{margin:0}
+.pass img{float:right;width:38%;max-width:240px;margin:4px 0 8px 14px;border-radius:4px}
+.pass::after{content:"";display:block;clear:both}
+.bl{display:inline-block;min-width:2.4em;text-align:center;border-bottom:2px solid var(--ink);font-weight:700;font-family:"Public Sans",sans-serif;font-size:.85em;line-height:1.3}
+.para{display:flex;gap:10px;margin:8px 0;padding:10px 14px;background:var(--bg);border-radius:6px}.para b{min-width:1.2em}
+.q{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--line)}
+.no{min-width:28px;font-variant-numeric:tabular-nums}
+.t{flex:1 1 280px;font-size:1.05rem}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px;flex-basis:100%;padding-left:38px}
+.opts.l{display:flex;flex-wrap:wrap}
+.ch{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:6px;min-height:40px;padding:6px 12px;text-align:left}
+.opts.l .ch{min-width:44px;text-align:center}
+.ch b{margin-right:6px}
+.ch.on{background:var(--on);border-color:var(--on);color:var(--paper)}
+.wimg{display:block;max-width:100%;margin:10px auto;border-radius:4px}
+textarea{width:100%;box-sizing:border-box;min-height:220px;font:1.05rem/1.8 "Noto Serif SC",serif;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
+.wc{color:var(--mute);font-size:.9rem;text-align:right}
+:focus-visible{outline:3px solid var(--on);outline-offset:2px}
+.sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.card{border:1px solid var(--line);border-radius:6px;padding:12px}.card b{font-size:1.8rem;display:block}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{padding:5px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.r-ok td:last-child{color:var(--ok)}.r-no td:last-child{color:var(--red)}
+.bank{display:flex;flex-wrap:wrap;gap:6px 20px;padding:10px 14px;background:var(--bg);border-radius:6px;margin:8px 0;font-size:1.1rem}
+.sbank{display:grid;gap:6px;margin:8px 0}.sbank div{padding:8px 12px;border:1px dashed var(--line);border-radius:6px}
+.sen{display:flex;gap:12px;flex-wrap:wrap;flex:1}.sen img{width:150px;max-height:150px;object-fit:contain;background:#fff;border-radius:4px}
+.sen>div{flex:1;min-width:200px;display:grid;gap:6px;align-content:start}.kw{font-size:1.3rem;font-weight:700}
+.sin{font:1.05rem "Noto Serif SC",serif;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
+.tw{overflow-x:auto}.ess{white-space:pre-wrap;background:var(--bg);border-radius:6px;padding:10px 12px}.sent{font-weight:600}
+</style></head><body>
+<form name="hasil-hsk4" data-netlify="true" netlify-honeypot="bot-field" hidden>
+<input name="bot-field"><input name="nama"><input name="kontak"><input name="mendengarkan"><input name="membaca"><input name="total_otomatis"><input name="mulai"><input name="selesai"><input name="durasi_menit"><textarea name="jawaban_1_64"></textarea><textarea name="kalimat_65_69"></textarea><textarea name="esai_70"></textarea>
+</form>
+<main id="app"></main>
+<audio id="au" preload="auto" src="listening.mp3"></audio>
+<script>
+const KEY=('ABBDCCACDACACA'+'CBAADACDAAACBABBDB'+'BCADEFDAEB'+'CDCBDCCAABDBDDB'+'CABBADC').split('');
+const k=n=>KEY[n-1];
+const REF={65:'您好，请问能用信用卡结账吗？',66:'他画了一幅美丽的风景画。',67:'小张，去把这些文件复印一下。',68:'我的妹妹是一个活泼可爱的小姑娘。',69:'她今天要拍工作照，所以穿得很正式。'};
+const WORD={65:'结账',66:'幅',67:'文件',68:'活泼',69:'正式'};
+const LO={
+1:['地点','方式','时间','人员'],2:['做生意','弹钢琴','演话剧','写文章'],3:['推迟了','任务复杂','没订旅馆','由小周负责'],4:['讲笑话','擦窗户','买白酒','选沙发'],5:['还没有想法','准备回老家','计划去北京','后悔留校了'],6:['放松一下','批评儿子','祝贺小方','转发消息'],7:['性格好','很细心','有点儿懒','非常骄傲'],
+8:['半小时内','大概一小时','两小时左右','至少三小时'],9:['袜子破了','特别吃惊','误会女的了','忘带钥匙了'],10:['厕所对面','院子里面','大厅旁边','餐厅后面'],11:['学费','车牌号','门的密码','租车的价格'],12:['他的孙子','他的同事','他的兄弟','他的爱人'],13:['工厂','食堂','加油站','健身房'],14:['堵车了','雨太大了','错过了公交','身份证丢了'],
+15:['洗毛衣','点外卖','寄快递','买酸奶'],16:['休假一天','举办活动','安排参观','请客庆祝'],17:['十分精彩','绿队赢了','有球员受伤','是网球比赛'],18:['咳嗽','胳膊痛','流鼻血','体温过高'],19:['打开手机','放好行李','收拾垃圾','不能用耳机'],20:['很感人','很流行','非常难听','缺点很多'],21:['赚钱不容易','家庭的重要','母亲很辛苦','怎样照顾儿童'],
+22:['进水了','太旧了','不停地响','无法打印'],23:['李师傅','刘队长','王教授','赵教练'],24:['成都','长春','南京','上海'],25:['很香','特别咸','有些苦','一点儿也不辣'],26:['开演唱会','考上博士','成为律师','当一名警察'],27:['明年入学','硕士毕业','在广东打工','普通话标准'],28:['力气很大','喜欢热闹','听力极好','速度较慢'],
+29:['江边','森林里','中国南方','亚洲西部'],30:['留学','工作','经济困难','给孩子看病'],31:['写信','发邮件','发短信','打电话'],32:['兴趣相同','感情很好','每天都散步','结婚十年了']};
+const FILL={33:'（　）一下，同学，请不要在自习室里大声讨论。',34:'从 1 月 1 日起，我市 60 岁以上的老年人可以（　）乘坐公共汽车。',35:'我父母都很幽默，爱开玩笑，他们（　）的对话总是十分有趣。',36:'如果你当时没那么粗心，（　）结果会完全不一样。',37:'最近几周天天加班，（　）辛苦，等到年底我给大家放几天假。',
+38:'A：冰箱里还有我上午做的葡萄汁，给你（　）一杯？\nB：不用了，我肚子有点儿难受，喝不了凉的。',39:'A：我都睡一觉了，你怎么还在看小说？\nB：就剩几页了，我想知道最后（　）怎么样了。',40:'A：明天就要面试了，我感觉自己还没准备好。\nB：别担心，表现得（　）点儿，你肯定能行。',41:'A：昨晚的京剧演出邀请了许多有名的演员，特别好看。\nB：早知道我就和你一起去了，真是太（　）了。',42:'A：你的小猫脾气真好，可以随便让人抱。\nB：可能是因为它刚吃饱，（　）比较好，平时才不这样呢。'};
+const RQ={
+43:['★ 最近：','多云','常常下雪','气温变化大','夜晚降温了'],44:['★ 那种翻译机：','翻译准确','每部 300 元','仅售票员有','支持多种语言'],45:['★ 他认为老张该怎样做？','改变主意','接受道歉','坚持到底','要有目标'],46:['★ 记课堂笔记的好处是：','练习汉字','加强理解','便于预习','能发现错误'],47:['★ 同学们明天最好带上：','零钱','早餐','毛巾','矿泉水'],
+48:['★ 那座山：','有很多树','路非常难走','带给他美好回忆','现在是著名景点'],49:['★ 有的人会对什么感到紧张？','聚会','考试','打招呼','拒绝别人'],50:['★ 根据这段话，什么让人羡慕？','入睡快','收入高','没有烦恼','浪漫的爱情'],
+51:['★ 小谢将去：','市场部','管理部','信息部','广告部'],52:['★ 说话人让小谢去那个部门，是为了让他：','整理文件','积累经验','招聘新人','证明自己'],
+53:['★ 申请签证的第一步是：','体检','答题','交费','填写申请表'],54:['★ 根据这段话，办理签证时，可以通过什么方式了解情况？','读报纸','查看网站','联系使馆','查找资料'],
+55:['★ 海菜花长在：','树上','山脚下','深海区','暖和的水中'],56:['★ 关于海菜花，可以知道：','叶子很大','晚上开花','又叫“富菜”','对生活环境要求严格'],57:['★ 这段话最可能出现在下列哪本杂志中？','《足球少年》','《植物研究》','《科技中国》','《艺术人生》']};
+const PS={
+43:'最近气温变得太快了！昨天最高温度才 10℃，我穿着厚外套都觉得冷，今天最高温竟然达到了 25℃，虽然我只穿了一件衬衫，但还是热得直出汗。',
+44:'北京大兴国际机场的地铁站内，所有工作人员都有一部外语翻译机。这种翻译机支持 34 种语言翻译，方便与国际旅客交流，提供有效服务。',
+45:'老张，放弃很简单，难的是面对压力还能坚持到底。即使别人都怀疑你、反对你，你也要记住，我会永远在你身边陪着你、鼓励你。',
+46:'记课堂笔记有很多好处，它不仅可以加强我们对知识内容的理解，还可以帮我们快速弄清学习的重点，便于期末复习。',
+47:'同学们，明天秋游，大家最好带瓶矿泉水，可以顺便再拿些小零食，比如饼干、巧克力什么的。但是不用带太多东西，学校为每个人都准备了午餐。',
+48:'我的家乡有一座山，小时候我经常和朋友们一起去山上，躺在草地上看风景，特别开心。长大后，尽管我去过很多地方，看了很多美景，但那座山的景色一直都是我心中最美好的回忆。',
+49:'遇见认识的人时，打个招呼很正常，但有些人对此却非常紧张。为了不打招呼，他们甚至在看见熟悉的人之后，故意低着头走。如果你遇到了这样的朋友，请不要感到不满，可能他只是比较容易害羞，不敢开口。',
+50:'根据调查，人们从关上灯到睡着一般需要 10 到 20 分钟。如果经常超过 30 分钟还没睡着，就是入睡困难了。但也有人一躺下就能睡着，能够“秒睡”，这是一件让很多人羡慕的事情。'};
+const bl=n=>`<span class="bl">${n}</span>`,P=a=>`<div class="pass zh">${a.map(x=>`<p>${x}</p>`).join('')}</div>`,R=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+const BANK=a=>`<div class="bank zh">${a.map((w,i)=>`<span><b>${'ABCDEF'[i]}</b> ${w}</span>`).join('')}</div>`;
+const SB=a=>`<div class="sbank zh">${a.map((w,i)=>`<div><b>${'ABCD'[i]}</b> ${w}</div>`).join('')}</div>`;
+const B=[
+{sec:0,title:'第一部分',note:'第 1～14 题：请选出正确答案。',qs:R(1,14)},
+{sec:0,title:'第二部分',note:'第 15～32 题：请选出正确答案。',qs:R(15,32)},
+{sec:1,title:'第一部分　33～37',note:'选词填空。请注意：其中一个选项为干扰项，需排除。',html:BANK(['之间','打扰','免费','也许','实在','街道']),qs:R(33,37),kind:'fill'},
+{sec:1,title:'38～42',note:'选词填空。请注意：其中一个选项为干扰项，需排除。',html:BANK(['自信','心情','修理','到底','可惜','倒']),qs:R(38,42),kind:'fill'},
+{sec:1,title:'第二部分',note:'第 43～57 题：请选出正确答案。',qs:R(43,50),kind:'one'},
+{sec:1,title:'51～52',html:P(['小谢，我了解了一下你目前的情况。考虑到你刚进我们公司，缺少这方面的经验，所以我打算让你去市场部，从基础学起，慢慢积累经验。明天上午，张经理会向你详细介绍市场部的工作内容，你有任何问题都可以问他。']),qs:[51,52]},
+{sec:1,title:'53～54',html:P(['申请签证时，首先需要在线上填写申请表，接着通过签证申请服务网站选择线下办理时间，然后按时去使馆交护照、照片等材料，并支付费用。同时，在办理签证的过程中，可以通过网站查看办理的情况。申请通过后，使馆会通知申请人的。']),qs:[53,54]},
+{sec:1,title:'55～57',html:P(['海菜花是一种中国才有的，在水中生活的植物。它喜欢阳光多又暖和的地方，并且对水的要求非常严格，稍微有一点儿污染都会受到影响。所以环保部门往往通过海菜花来判断水是否受到了污染，因此它也被叫作“环保菜”。在过去几十年里，受水、气候条件等影响，海菜花的数量一直在减少，不过近几年，由于云南大理加强环境保护，海菜花的数量不断增加。现在，每年 5 月到 10 月，洱海北部 20 公里全部开满了海菜花，十分美丽。']),qs:[55,56,57]},
+{sec:1,title:'第三部分　58～60',note:'第 58～64 题：选句填空。',html:P([`一位作家花了四个月的时间，${bl(58)}，去了 41 个城市的 56 家动物园，然后根据这段经历，写了一本与动物园有关的书。有人问这位作家为什么专门去逛动物园，${bl(59)}，一直想把全中国的动物园都逛一遍。他认为只有了解动物，${bl(60)}，才能使我们成为更好的人。`])+SB(['他说自己从小就很喜欢动物园','尊重生命','走遍了中国几乎所有的省']),qs:R(58,60),kind:'sent',n:3},
+{sec:1,title:'61～64',html:P([`2023 年 7 月，一些喜爱音乐的人在贵阳举行了一场路边音乐会。${bl(61)}，还有不少来自各个职业的普通人。这场音乐会无需门票，人人都能参加，${bl(62)}，同时也引起了许多网友关注，很快就在互联网上火了起来，想要参加的人也越来越多，${bl(63)}。于是，这样的音乐会开始慢慢从路边走进了大学城、商场前、城市路口……到 2025 年 5 月，${bl(64)}，参加的总人数超过 300 万。路边音乐会不但丰富了人们的夜生活，也为有音乐梦想的人提供了一定机会。`])+SB(['因此吸引了不少热情的观众','演出的歌手除了专业人员外','贵阳市一共举行了 400 多场路边音乐会','一场音乐会远远不够']),qs:R(61,64),kind:'sent',n:4},
+{sec:2,title:'第一部分',note:'第 65～69 题：看图，用词造句。',qs:R(65,69),kind:'sen'},
+{sec:2,title:'第二部分',note:'第 70 题：写短文。请写一篇不少于 80 字的短文，介绍一下你最难忘的一次旅行。',es:70,min:80}];
+const KIND={};B.forEach(b=>b.qs&&b.qs.forEach(n=>KIND[n]={k:b.kind,n:b.n}));
+const ST=[{n:'听力 · Mendengarkan',a:1,b:32},{n:'阅读 · Membaca',a:33,b:64,min:30},{n:'写作 · Menulis',a:65,b:70,min:25}];
+const PART=n=>n<=32?'Mendengarkan · Bagian '+(n<=14?1:2):'Membaca · Bagian '+(n<=42?1:n<=57?2:3);
+const $=s=>document.querySelector(s),app=$('#app'),au=$('#au'),A={},M={};
+let stage=-1,end=0,timer,U={nama:'',kontak:''},T0=0;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+const zc=s=>(s.match(/[㐀-鿿]/g)||[]).length;
+const btn=(n,v,l)=>`<button type="button" class="ch${A[n]==v?' on':''}" data-n="${n}" data-v="${v}"><b>${v}</b>${l?`<span class="zh">${l}</span>`:''}</button>`;
+function intro(){app.innerHTML=`<a class="back" href="../">← Pilih level lain</a><section class="paper cover"><p class="zh">中文水平考试</p><h1 class="zh">HSK（四级）</h1><span class="seal zh">样卷</span>
+<p>Simulasi ujian · 70 soal · sekitar 81 menit</p>
+<ol><li><b>Mendengarkan</b> (soal 1–32): audio sekitar 21 menit diputar sekali dan tidak bisa dijeda, lalu 5 menit mengisi jawaban.</li><li><b>Membaca</b> (33–64): 30 menit.</li><li><b>Menulis</b> (65–70): 25 menit. Lima kalimat dari gambar dan satu karangan pendek (minimal 80 karakter).</li><li>Waktu habis, bagian berpindah otomatis. Bagian yang sudah lewat tidak bisa dibuka lagi.</li><li>Pakai headphone dan pastikan volume sudah pas sebelum mulai.</li></ol>
+<div class="who"><label>Nama lengkap<input id="nm" autocomplete="name" required></label><label>WhatsApp / email (opsional)<input id="kt" autocomplete="email"></label></div>
+<button class="go" id="start" disabled>Mulai ujian</button></section>`;
+const nm=$('#nm'),kt=$('#kt'),st=$('#start');nm.oninput=()=>st.disabled=!nm.value.trim();
+st.onclick=()=>{U={nama:nm.value.trim(),kontak:kt.value.trim()};T0=Date.now();run(0)}}
+function qHTML(n){const K=KIND[n]||{},no=`<b class="no">${n}</b>`;
+if(n<=32)return `<div class="q" id="q${n}">${no}<div class="opts">${LO[n].map((o,i)=>btn(n,'ABCD'[i],o)).join('')}</div></div>`;
+if(K.k=='fill')return `<div class="q" id="q${n}">${no}<span class="zh t" style="white-space:pre-line">${FILL[n]}</span><div class="opts l">${'ABCDEF'.split('').map(v=>btn(n,v)).join('')}</div></div>`;
+if(K.k=='sent')return `<div class="q" id="q${n}">${no}<span class="t">Isi kotak ${n}</span><div class="opts l">${'ABCD'.slice(0,K.n).split('').map(v=>btn(n,v)).join('')}</div></div>`;
+if(K.k=='sen')return `<div class="q" id="q${n}">${no}<div class="sen"><img src="img/w${n}.jpg" alt="Gambar soal ${n}"><div><span class="kw zh">${WORD[n]}</span><input class="sin zh" data-n="${n}" placeholder="用“${WORD[n]}”造句…" value="${esc(A[n]||'')}" autocomplete="off"></div></div></div>`;
+const q=RQ[n];return `<div class="q" id="q${n}">${no}<div class="t">${K.k=='one'?`<div class="pass zh"><p>${PS[n]}</p></div>`:''}<span class="zh">${q[0]}</span></div><div class="opts">${q.slice(1).map((o,i)=>btn(n,'ABCD'[i],o)).join('')}</div></div>`}
+function bHTML(b){let h=`<section class="paper blk"><h2 class="zh">${b.title}</h2>`;
+if(b.note)h+=`<p class="note zh">${b.note}</p>`;
+if(b.html)h+=b.html;
+if(b.es)return h+`<textarea class="es" data-n="${b.es}" placeholder="在这里写短文…">${esc(A[b.es]||'')}</textarea><p class="wc"><span id="wc${b.es}">${zc(A[b.es]||'')}</span> / minimal ${b.min} karakter</p></section>`;
+return h+b.qs.map(qHTML).join('')+'</section>'}
+function run(i){stage=i;const S=ST[i];
+const dur=isFinite(au.duration)?Math.ceil(au.duration):1269;
+end=Date.now()+(i==0?dur+300:S.min*60)*1000;
+let c='';for(let n=S.a;n<=S.b;n++)c+=`<button class="chip${A[n]?' done':''}" id="c${n}" data-go="${n}">${n}</button>`;
+app.innerHTML=`<header class="bar"><div class="row"><div class="nm"><b class="zh">${S.n}</b><small id="lab"></small></div><span class="tm" id="tm" role="timer">--:--</span><button class="fin" id="fin">Selesai bagian ini</button><button class="fin" id="pl" hidden>Putar audio</button></div><div class="chips">${c}</div></header>`+B.filter(b=>b.sec==i).map(bHTML).join('');
+scrollTo(0,0);
+$('#fin').onclick=function(){if(this.dataset.c)return next();this.dataset.c=1;this.textContent=(stage==0&&!au.ended)?'Audio akan berhenti. Klik lagi':'Yakin? Klik lagi';setTimeout(()=>{delete this.dataset.c;this.textContent='Selesai bagian ini'},4000)};
+if(i==0){$('#pl').onclick=()=>{au.play();$('#pl').hidden=true};au.currentTime=0;au.play().catch(()=>{$('#pl').hidden=false})}
+clearInterval(timer);timer=setInterval(tick,500);tick()}
+function tick(){const s=Math.max(0,Math.round((end-Date.now())/1000)),t=$('#tm');if(!t)return;t.textContent=fmt(s);t.classList.toggle('low',s<300);
+const lab=$('#lab');if(stage==0){lab.textContent=au.ended?'Audio selesai. Isi dan periksa jawabanmu.':'Audio sedang diputar'}else lab.textContent='Sisa waktu bagian ini';
+if(s<=0)next()}
+function next(){au.pause();clearInterval(timer);stage<2?run(stage+1):result()}
+app.addEventListener('click',e=>{const b=e.target.closest('.ch');if(b){const n=b.dataset.n;A[n]=A[n]==b.dataset.v?'':b.dataset.v;document.querySelectorAll(`.ch[data-n="${n}"]`).forEach(x=>x.classList.toggle('on',x.dataset.v==A[n]));mark(n);return}
+const g=e.target.closest('[data-go]');if(g)$('#q'+g.dataset.go)?.scrollIntoView({behavior:'smooth',block:'start'})});
+app.addEventListener('input',e=>{const n=e.target.dataset.n;if(e.target.classList.contains('es')){A[n]=e.target.value;$('#wc'+n).textContent=zc(A[n]);mark(n)}else if(e.target.classList.contains('sin')){A[n]=e.target.value;mark(n)}});
+app.addEventListener('change',e=>{if(e.target.dataset.m){M[e.target.dataset.m]=e.target.checked;wr()}});
+function mark(n){const c=$('#c'+n);if(c)c.classList.toggle('done',!!(A[n]||'').trim())}
+const ok=n=>A[n]==k(n);
+const cnt=(a,b)=>{let c=0;for(let n=a;n<=b;n++)if(ok(n))c++;return c};
+function wr(){const c=R(65,69).filter(n=>M[n]).length;$('#wsc').textContent=c+'/5'}
+function result(){stage=3;const c1=cnt(1,32),c2=cnt(33,64);let rows='';
+for(let n=1;n<=64;n++)rows+=`<tr class="${ok(n)?'r-ok':'r-no'}"><td>${n}</td><td>${A[n]||'–'}</td><td>${k(n)}</td><td>${ok(n)?'Benar':'Salah'}</td></tr>`;
+const sens=R(65,69).map(n=>`<tr><td>${n}</td><td class="zh">${WORD[n]}</td><td class="zh">${esc((A[n]||'').trim()||'–')}</td><td class="zh">${REF[n]}</td><td><label><input type="checkbox" data-m="${n}"> Sesuai</label></td></tr>`).join('');
+app.innerHTML=`<section class="paper" id="res"><h2>Hasil ujian</h2><div class="sum" id="sum"><div class="card"><span class="zh">听力 Mendengarkan</span><b>${c1}/32</b>${Math.round(c1/32*100)}%</div><div class="card"><span class="zh">阅读 Membaca</span><b>${c2}/32</b>${Math.round(c2/32*100)}%</div><div class="card"><span class="zh">写作 Menulis 65–69</span><b id="wsc">0/5</b>dinilai guru</div></div>
+<p class="note">Persentase adalah perkiraan sederhana (jumlah benar dibagi jumlah soal), bukan konversi skor resmi HSK. Kalimat 65–69 dan karangan 70 dinilai guru: bandingkan dengan jawaban referensi lalu centang “Sesuai” jika kalimatnya benar dan memakai kata yang diminta.</p></section>
+<section class="paper"><h2>Kalimat 65–69</h2><div class="tw"><table><thead><tr><th>No</th><th>Kata</th><th>Kalimatmu</th><th>Referensi</th><th>Nilai</th></tr></thead><tbody>${sens}</tbody></table></div>
+<h3 class="zh">第 70 题 · ${zc(A[70]||'')} karakter</h3><div class="ess zh">${esc((A[70]||'').trim()||'–')}</div></section>
+<section class="paper"><h2>Lembar jawaban 1–64</h2><div class="tw"><table><thead><tr><th>No</th><th>Jawabanmu</th><th>Kunci</th><th>Hasil</th></tr></thead><tbody>${rows}</tbody></table></div><p><button class="go" onclick="location.reload()">Ulangi ujian</button></p></section>`;
+scrollTo(0,0);send(c1,c2);
+HSKLog.render($('#res'),{level:'HSK 4',name:U.nama,items:R(1,64).filter(n=>!ok(n)).map(n=>({q:n,section:PART(n),text:FILL[n]?FILL[n].replace(/\n/g,' '):RQ[n]?RQ[n][0].replace('★ ',''):'',my:A[n],key:k(n)}))})}
+function send(c1,c2){const t1=Date.now(),
+d={'form-name':'hasil-hsk4',nama:U.nama,kontak:U.kontak,mendengarkan:c1+'/32',membaca:c2+'/32',total_otomatis:(c1+c2)+'/64',
+mulai:new Date(T0).toLocaleString('id-ID'),selesai:new Date(t1).toLocaleString('id-ID'),durasi_menit:String(Math.round((t1-T0)/60000)),
+jawaban_1_64:R(1,64).map(n=>`${n}:${A[n]||'-'}${ok(n)?'✓':'✗'}`).join(' '),kalimat_65_69:R(65,69).map(n=>`${n} (${WORD[n]}): ${(A[n]||'-').trim()}`).join('\n'),esai_70:(A[70]||'').trim()};
+const m=document.createElement('p');m.className='sent';m.textContent='Mengirim hasil…';$('#sum').after(m);
+fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(d).toString()})
+.then(r=>{if(!r.ok)throw 0;m.textContent='✓ Hasil sudah terkirim ke guru.';m.style.color='var(--ok)'})
+.catch(()=>{m.textContent='Hasil gagal terkirim. Screenshot halaman ini dan kirim ke guru.';m.style.color='var(--red)'})}
+intro();
+</script><script src="/log.js"></script>
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
+</body></html>
