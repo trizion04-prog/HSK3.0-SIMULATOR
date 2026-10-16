@@ -20,3 +20,11 @@ Hasilnya bisa dilihat di dashboard Netlify, menu **Forms**. Form detection harus
 
 Jalankan server lokal dari folder ini, misalnya `python3 -m http.server`, lalu buka `http://localhost:8000`.
 Pengiriman hasil hanya berfungsi setelah situsnya di-deploy di Netlify.
+
+## Aplikasi (PWA)
+
+Situs ini bisa dipasang sebagai aplikasi di HP dan laptop (`manifest.webmanifest`, `sw.js`, ikon di `icons/`).
+- Android / Chrome: tekan tombol **Pasang** di halaman pembuka, atau pilih **Tambahkan ke layar utama** dari menu browser.
+- iPhone / Safari: ketuk **Bagikan**, lalu **Tambah ke Layar Utama**.
+
+Halaman yang sudah pernah dibuka bisa dibuka lagi tanpa internet. Untuk memaksa semua pengguna mengambil versi baru, naikkan nama `CACHE` di `sw.js`.

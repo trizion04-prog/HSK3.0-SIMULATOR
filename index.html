@@ -3,6 +3,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>HSK Simulator</title>
 <meta name="description" content="Simulasi ujian HSK online: pilih level, kerjakan soal dengan timer, dan lihat hasilnya.">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0e5a63">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HSK Simulator">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#e9edf1;--paper:#fff;--ink:#17212b;--mute:#5b6773;--line:#c8d0d8;--on:#0e5a63;--onbg:#dff0f2;--red:#b42318;box-sizing:border-box}
@@ -24,6 +31,7 @@ a.card:hover,a.card:focus-visible{border-color:var(--on);transform:translateY(-2
 .card ul{margin:12px 0 0;padding-left:18px;color:var(--mute);font-size:.92rem}
 .card .go{display:inline-block;margin-top:14px;font-weight:700;color:var(--on)}
 .card.soon{opacity:.55}
+.app{margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:16px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}.app img{width:52px;height:52px;border-radius:12px}.app div{flex:1;min-width:200px}.app p{margin:2px 0 0;color:var(--mute);font-size:.92rem}.app button{font:inherit;font-weight:700;background:var(--on);color:var(--paper);border:0;border-radius:6px;padding:10px 20px;cursor:pointer}
 :focus-visible{outline:3px solid var(--on);outline-offset:2px}
 footer{color:var(--mute);font-size:.85rem;text-align:center;margin-top:36px}
 </style></head><body>
@@ -36,6 +44,16 @@ footer{color:var(--mute);font-size:.85rem;text-align:center;margin-top:36px}
 <a class="card" href="hsk5/"><span class="tag">Level 5</span><span class="big zh">HSK 五级</span>
 <ul><li>72 soal · sekitar 105 menit</li><li>Mendengarkan, Membaca, 2 karangan</li></ul><span class="go">Mulai HSK 5 →</span></a>
 </div>
+<section class="app" id="app" hidden><img src="/icons/icon-192.png" alt=""><div><b>Pasang sebagai aplikasi</b><p id="how">Buka HSK Simulator langsung dari layar HP, tanpa membuka browser.</p></div><button id="inst" hidden>Pasang</button></section>
 <footer>Simulasi latihan, bukan ujian resmi. Siapkan headphone sebelum mulai.</footer>
 </main>
+<script>
+(()=>{const box=document.getElementById('app'),b=document.getElementById('inst'),how=document.getElementById('how');
+if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)return;
+let ev;addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;box.hidden=false;b.hidden=false});
+b.onclick=async()=>{if(!ev)return;ev.prompt();await ev.userChoice;ev=null;box.hidden=true};
+addEventListener('appinstalled',()=>box.hidden=true);
+if(/iphone|ipad|ipod/i.test(navigator.userAgent)){box.hidden=false;how.innerHTML='Di Safari, ketuk tombol <b>Bagikan</b> (kotak dengan panah ke atas), lalu pilih <b>Tambah ke Layar Utama</b>.'}})();
+</script>
+<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
 </body></html>

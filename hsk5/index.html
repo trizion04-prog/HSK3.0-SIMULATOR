@@ -2,6 +2,13 @@
 <html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>HSK 5 Mock Test</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0e5a63">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="HSK Simulator">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#e9edf1;--paper:#fff;--ink:#17212b;--mute:#5b6773;--line:#c8d0d8;--on:#0e5a63;--onbg:#dff0f2;--red:#b42318;--ok:#1b7a3d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -150,4 +157,5 @@ fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlenco
 .then(r=>{if(!r.ok)throw 0;m.textContent='✓ Hasil sudah terkirim ke guru.';m.style.color='var(--ok)'})
 .catch(()=>{m.textContent='Hasil gagal terkirim. Screenshot halaman ini dan kirim ke guru.';m.style.color='var(--red)'})}
 intro();
-</script></body></html>
+</script><script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
+</body></html>
