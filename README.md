@@ -6,6 +6,7 @@ Simulasi ujian HSK online dengan timer, audio listening, dan penilaian otomatis.
 |---|---|
 | `index.html` | Halaman pembuka: pilih level |
 | `hsk1/` | HSK 1: 40 soal, sekitar 36 menit, dengan pinyin |
+| `hsk2/` | HSK 2: 60 soal, sekitar 56 menit, dengan pinyin |
 | `hsk3/` | HSK 3: 70 soal, sekitar 83 menit |
 | `hsk5/` | HSK 5: 72 soal, sekitar 105 menit (audio `listening.mp3`, gambar di `img/`) |
 | `log/` | Log kesalahan dari semua level, bisa diunduh sebagai CSV |
@@ -14,6 +15,7 @@ Simulasi ujian HSK online dengan timer, audio listening, dan penilaian otomatis.
 
 Setiap peserta mengisi nama sebelum mulai. Saat ujian selesai, hasilnya dikirim ke **Netlify Forms**:
 - `hasil-hsk1` untuk HSK 1
+- `hasil-hsk2` untuk HSK 2
 - `hasil-hsk3` untuk HSK 3
 - `hasil-hsk5` untuk HSK 5
 
