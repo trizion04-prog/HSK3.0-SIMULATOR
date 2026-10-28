@@ -53,3 +53,9 @@ Di halaman hasil setiap ujian, semua soal yang salah masuk ke daftar **Log kesal
 - Baris di atas waktu adalah nomor soal. Teks setelah `|` adalah judul bagian.
 - Awali teks dengan `[?]` untuk menandai kalimat yang perlu dicek. Tanda ini tampil sebagai "⚑ cek".
 - Transkrip saat ini mencakup soal 1–42. Jeda menjawab sekitar 13 detik setelah setiap soal menjadi patokan waktu tiap soal.
+
+## Subtitle HSK 5 mock test 1
+
+Transkrip listening mock test 1 (dari 听力文本) ada di `hsk5/mock1/transcript.json`: `q` = nomor soal, `spk` = 男/女/问, `s`/`e` = detik di audio (null kalau audionya belum ada).
+Di halaman ujian setiap soal listening punya tombol **Tampilkan subtitle** sendiri; di halaman hasil ada **Review listening** dengan audio yang bisa diputar ulang.
+Waktu subtitle soal 1–16 disinkronkan otomatis dengan speech recognition. Audio soal 17–35 belum tersedia.
