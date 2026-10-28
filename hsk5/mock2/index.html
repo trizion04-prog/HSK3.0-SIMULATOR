@@ -90,18 +90,18 @@ const B=[
 {sec:2,title:'第 72 题：话题作文',note:"有的年轻人认为“要对自己好一点儿”，鼓励消费；有的却认为“存钱才有安全感”。请写一篇不少于 200 字的作文，分享年轻人的消费观念以及你的看法。",es:72,min:200}];
 const ST=[{n:'听力 · Mendengarkan',a:1,b:35},{n:'阅读 · Membaca',a:36,b:70,min:35},{n:'写作 · Menulis',a:71,b:72,min:40}];
 const $=s=>document.querySelector(s),app=$('#app'),au=$('#au'),A={};
-let AUD=false,stage=-1,end=0,timer,U={nama:'',kontak:''},T0=0;
+let AUD=false,AUDQ=35,LQ=0,stage=-1,end=0,timer,U={nama:'',kontak:''},T0=0;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
 const zc=s=>(s.match(/[㐀-鿿]/g)||[]).length;
 const btn=(n,v,l)=>`<button type="button" class="ch${A[n]==v?' on':''}" data-n="${n}" data-v="${v}"><b>${v}</b>${l?`<span class="zh">${l}</span>`:''}</button>`;
 function intro(){app.innerHTML=`<a class="back" href="/">← Pilih level lain</a><section class="paper cover"><p class="zh">中文水平考试</p><h1 class="zh">HSK（五级）</h1><span class="seal zh">全真模拟试卷 2</span>
 <p>Simulasi ujian · 72 soal · sekitar 105 menit</p>
-<ol>${AUD?`<li><b>Mendengarkan</b> (soal 1–35): audio diputar sekali dan tidak bisa dijeda, lalu 5 menit mengisi jawaban.</li>`:`<li><b>Mendengarkan</b> (soal 1–35): <b>audio untuk tes ini belum tersedia</b>, jadi ujian dimulai dari bagian Membaca dan soal 1–35 tidak dinilai.</li>`}<li><b>Membaca</b> (36–70): 35 menit.</li><li><b>Menulis</b> (71–72): 40 menit, dua karangan (minimal 100 dan 200 karakter).</li><li>Waktu habis, bagian berpindah otomatis. Bagian yang sudah lewat tidak bisa dibuka lagi.</li><li>Pakai headphone dan pastikan volume sudah pas sebelum mulai.</li></ol>
+<ol><li><b>Mendengarkan</b> (soal 1–35): ${LQ>=35?`audio diputar sekali dan tidak bisa dijeda, lalu 5 menit mengisi jawaban.`:LQ?`audio saat ini baru mencakup <b>soal 1–${LQ}</b>. Soal ${LQ+1}–35 tetap ditampilkan, tapi belum ada audionya dan tidak dinilai.`:`<b>audio untuk tes ini belum tersedia.</b> Soal 1–35 tetap ditampilkan supaya lengkap (10 menit), tapi tidak dinilai.`}</li><li><b>Membaca</b> (36–70): 35 menit.</li><li><b>Menulis</b> (71–72): 40 menit, dua karangan (minimal 100 dan 200 karakter).</li><li>Waktu habis, bagian berpindah otomatis. Bagian yang sudah lewat tidak bisa dibuka lagi.</li><li>Pakai headphone dan pastikan volume sudah pas sebelum mulai.</li></ol>
 <div class="who"><label>Nama lengkap<input id="nm" autocomplete="name" required></label><label>WhatsApp / email (opsional)<input id="kt" autocomplete="email"></label></div>
 <button class="go" id="start" disabled>Mulai ujian</button></section>`;
 const nm=$('#nm'),kt=$('#kt'),st=$('#start');nm.oninput=()=>st.disabled=!nm.value.trim();
-st.onclick=()=>{U={nama:nm.value.trim(),kontak:kt.value.trim()};T0=Date.now();run(AUD?0:1)}}
+st.onclick=()=>{U={nama:nm.value.trim(),kontak:kt.value.trim()};T0=Date.now();run(0)}}
 function qHTML(n,ord){
 if(n<=35)return `<div class="q" id="q${n}"><b class="no">${n}</b><div class="opts">${LO[n].map((o,i)=>btn(n,'ABCD'[i],o)).join('')}</div></div>`;
 if(ord)return `<div class="q" id="q${n}"><b class="no">${n}</b><span class="t">Paragraf ke-${n-(n>50?50:45)}</span><div class="opts l">${'ABCDE'.split('').map(v=>btn(n,v)).join('')}</div></div>`;
@@ -114,16 +114,16 @@ if(b.img)h+=`<img class="wimg" src="${b.img}" alt="Empat gambar cerita untuk soa
 if(b.es)return h+`<textarea class="es" data-n="${b.es}" placeholder="在这里写作文…">${esc(A[b.es]||'')}</textarea><p class="wc"><span id="wc${b.es}">${zc(A[b.es]||'')}</span> / minimal ${b.min} karakter</p></section>`;
 return h+b.qs.map(n=>qHTML(n,!!b.ord)).join('')+'</section>'}
 function run(i){stage=i;const S=ST[i];
-const dur=isFinite(au.duration)?Math.ceil(au.duration):1500;
-end=Date.now()+(i==0?dur+300:S.min*60)*1000;
+const dur=isFinite(au.duration)?Math.ceil(au.duration):1592;
+end=Date.now()+(i==0?(AUD?dur+300:600):S.min*60)*1000;
 let c='';for(let n=S.a;n<=S.b;n++)c+=`<button class="chip${A[n]?' done':''}" id="c${n}" data-go="${n}">${n}</button>`;
-app.innerHTML=`<header class="bar"><div class="row"><div class="nm"><b class="zh">${S.n}</b><small id="lab"></small></div><span class="tm" id="tm" role="timer">--:--</span><button class="fin" id="fin">Selesai bagian ini</button><button class="fin" id="pl" hidden>Putar audio</button></div><div class="chips">${c}</div></header>`+B.filter(b=>b.sec==i).map(bHTML).join('');
+app.innerHTML=`<header class="bar"><div class="row"><div class="nm"><b class="zh">${S.n}</b><small id="lab"></small></div><span class="tm" id="tm" role="timer">--:--</span><button class="fin" id="fin">Selesai bagian ini</button><button class="fin" id="pl" hidden>Putar audio</button></div><div class="chips">${c}</div></header>`+(i==0&&LQ<35?`<section class="paper"><p class="note" style="margin:0">${LQ?`Audio baru tersedia untuk soal 1–${LQ}. Soal ${LQ+1}–35 belum ada audionya dan tidak dinilai.`:`Audio untuk bagian ini belum tersedia. Soal ditampilkan supaya lengkap, tapi tidak dinilai.`}</p></section>`:'')+B.filter(b=>b.sec==i).map(bHTML).join('');
 scrollTo(0,0);
 $('#fin').onclick=function(){if(this.dataset.c)return next();this.dataset.c=1;this.textContent=(stage==0&&!au.ended)?'Audio akan berhenti. Klik lagi':'Yakin? Klik lagi';setTimeout(()=>{delete this.dataset.c;this.textContent='Selesai bagian ini'},4000)};
-if(i==0){$('#pl').onclick=()=>{au.play();$('#pl').hidden=true};au.currentTime=0;au.play().catch(()=>{$('#pl').hidden=false})}
+if(i==0&&AUD){$('#pl').onclick=()=>{au.play();$('#pl').hidden=true};au.currentTime=0;au.play().catch(()=>{$('#pl').hidden=false})}
 clearInterval(timer);timer=setInterval(tick,500);tick()}
 function tick(){const s=Math.max(0,Math.round((end-Date.now())/1000)),t=$('#tm');if(!t)return;t.textContent=fmt(s);t.classList.toggle('low',s<300);
-const lab=$('#lab');if(stage==0){lab.textContent=au.ended?'Audio selesai. Isi dan periksa jawabanmu.':'Audio sedang diputar'}else lab.textContent='Sisa waktu bagian ini';
+const lab=$('#lab');if(stage==0&&!AUD){lab.textContent='Audio belum tersedia · tidak dinilai'}else if(stage==0){lab.textContent=au.ended?'Audio selesai. Isi dan periksa jawabanmu.':'Audio sedang diputar'}else lab.textContent='Sisa waktu bagian ini';
 if(s<=0)next()}
 function next(){au.pause();clearInterval(timer);stage<2?run(stage+1):result()}
 app.addEventListener('click',e=>{const b=e.target.closest('.ch');if(b){const n=b.dataset.n;A[n]=A[n]==b.dataset.v?'':b.dataset.v;document.querySelectorAll(`.ch[data-n="${n}"]`).forEach(x=>x.classList.toggle('on',x.dataset.v==A[n]));mark(n);return}
@@ -132,24 +132,24 @@ app.addEventListener('input',e=>{if(e.target.classList.contains('es')){const n=e
 function mark(n){const c=$('#c'+n);if(c)c.classList.toggle('done',!!(A[n]||'').trim())}
 const ok=n=>A[n]==k(n);
 const cnt=(a,b)=>{let c=0;for(let n=a;n<=b;n++)if(ok(n))c++;return c};
-function result(){stage=3;const c1=cnt(1,35),c2=cnt(36,70);let rows='';
-for(let n=1;n<=70;n++)rows+=`<tr class="${ok(n)?'r-ok':'r-no'}"><td>${n}</td><td>${A[n]||'–'}</td><td>${k(n)}</td><td>${ok(n)?'Benar':'Salah'}</td></tr>`;
+function result(){stage=3;const c1=cnt(1,LQ),c2=cnt(36,70);let rows='';
+for(let n=1;n<=70;n++){const sk=n<=35&&n>LQ;rows+=`<tr class="${sk?'':ok(n)?'r-ok':'r-no'}"><td>${n}</td><td>${A[n]||'–'}</td><td>${k(n)}</td><td>${sk?'Tidak dinilai':ok(n)?'Benar':'Salah'}</td></tr>`}
 const es=n=>`<h3 class="zh">第 ${n} 题 · ${zc(A[n]||'')} karakter</h3><div class="ess zh">${esc((A[n]||'').trim()||'–')}</div>`;
-app.innerHTML=`<section class="paper" id="res"><h2>Hasil ujian</h2><div class="sum" id="sum"><div class="card"><span class="zh">听力 Mendengarkan</span>${AUD?`<b>${c1}/35</b>${Math.round(c1/35*100)}%`:`<b>–</b>audio belum tersedia`}</div><div class="card"><span class="zh">阅读 Membaca</span><b>${c2}/35</b>${Math.round(c2/35*100)}%</div><div class="card"><span class="zh">写作 Menulis</span><b>–</b>dinilai guru</div></div>
+app.innerHTML=`<section class="paper" id="res"><h2>Hasil ujian</h2><div class="sum" id="sum"><div class="card"><span class="zh">听力 Mendengarkan</span>${LQ?`<b>${c1}/${LQ}</b>${Math.round(c1/LQ*100)}%${LQ<35?` · soal 1–${LQ}`:``}`:`<b>–</b>audio belum tersedia`}</div><div class="card"><span class="zh">阅读 Membaca</span><b>${c2}/35</b>${Math.round(c2/35*100)}%</div><div class="card"><span class="zh">写作 Menulis</span><b>–</b>dinilai guru</div></div>
 <p class="note">Persentase adalah perkiraan sederhana (jumlah benar dibagi jumlah soal), bukan konversi skor resmi HSK. Karangan 71–72 dinilai oleh guru.</p></section>
 <section class="paper"><h2>Karangan</h2>${es(71)}${es(72)}</section>
 <section class="paper"><h2>Lembar jawaban 1–70</h2><div class="tw"><table><thead><tr><th>No</th><th>Jawabanmu</th><th>Kunci</th><th>Hasil</th></tr></thead><tbody>${rows}</tbody></table></div><p><button class="go" onclick="location.reload()">Ulangi ujian</button></p></section>`;
 scrollTo(0,0);send(c1,c2);
-HSKLog.render($('#res'),{level:'HSK 5 · Mock 2',name:U.nama,items:R(AUD?1:36,70).filter(n=>!ok(n)).map(n=>({q:n,section:(n<=35?'Mendengarkan':'Membaca')+' · Bagian '+(n<=19?1:n<=35?2:n<=45?1:n<=55?2:3),text:n>35&&RQ[n]?RQ[n][0]:'',my:A[n],key:k(n)}))})}
+HSKLog.render($('#res'),{level:'HSK 5 · Mock 2',name:U.nama,items:R(1,70).filter(n=>(n>35||n<=LQ)&&!ok(n)).map(n=>({q:n,section:(n<=35?'Mendengarkan':'Membaca')+' · Bagian '+(n<=19?1:n<=35?2:n<=45?1:n<=55?2:3),text:n>35&&RQ[n]?RQ[n][0]:'',my:A[n],key:k(n)}))})}
 function send(c1,c2){const t1=Date.now(),
-d={'form-name':'hasil-hsk5-mock2',nama:U.nama,kontak:U.kontak,mendengarkan:AUD?c1+'/35':'-',membaca:c2+'/35',total_otomatis:AUD?(c1+c2)+'/70':c2+'/35 (tanpa listening)',
+d={'form-name':'hasil-hsk5-mock2',nama:U.nama,kontak:U.kontak,mendengarkan:LQ?c1+'/'+LQ:'-',membaca:c2+'/35',total_otomatis:(c1+c2)+'/'+(LQ+35),
 mulai:new Date(T0).toLocaleString('id-ID'),selesai:new Date(t1).toLocaleString('id-ID'),durasi_menit:String(Math.round((t1-T0)/60000)),
 jawaban_1_70:R(1,70).map(n=>`${n}:${A[n]||'-'}${ok(n)?'✓':'✗'}`).join(' '),esai_71:(A[71]||'').trim(),esai_72:(A[72]||'').trim()};
 const m=document.createElement('p');m.className='sent';m.textContent='Mengirim hasil…';$('#sum').after(m);
 fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(d).toString()})
 .then(r=>{if(!r.ok)throw 0;m.textContent='✓ Hasil sudah terkirim ke guru.';m.style.color='var(--ok)'})
 .catch(()=>{m.textContent='Hasil gagal terkirim. Screenshot halaman ini dan kirim ke guru.';m.style.color='var(--red)'})}
-fetch('listening.mp3',{method:'HEAD'}).then(r=>{if(r.ok&&/audio|mpeg|octet/.test(r.headers.get('content-type')||'')){AUD=true;au.src='listening.mp3'}}).catch(()=>{}).finally(intro);
+fetch('listening.mp3',{method:'HEAD'}).then(r=>{if(r.ok&&/audio|mpeg|octet/.test(r.headers.get('content-type')||'')){AUD=true;LQ=AUDQ;au.src='listening.mp3'}}).catch(()=>{}).finally(intro);
 </script><script src="/log.js"></script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
 </body></html>
