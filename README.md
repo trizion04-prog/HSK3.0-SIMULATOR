@@ -10,6 +10,7 @@ Simulasi ujian HSK online dengan timer, audio listening, dan penilaian otomatis.
 | `hsk3/` | HSK 3: 70 soal, sekitar 83 menit |
 | `hsk4/` | HSK 4: 70 soal, sekitar 81 menit |
 | `hsk5/` | HSK 5: 72 soal, sekitar 105 menit (audio `listening.mp3`, gambar di `img/`) |
+| `hsk6/` | HSK 6 (H61330): latihan mendengarkan dengan subtitle sinkron (`listening.vtt`) |
 | `log/` | Log kesalahan dari semua level, bisa diunduh sebagai CSV |
 
 ## Hasil peserta
@@ -44,3 +45,10 @@ Di halaman hasil setiap ujian, semua soal yang salah masuk ke daftar **Log kesal
 - Salinannya juga dikirim ke Netlify Forms dengan nama `log-kesalahan`.
 - Kolom CSV: `date,level,section,question,my_answer,correct_answer,why_I_missed_it,what_to_review,review_date`
 - Kode bersama ada di `log.js`. Soal Menulis yang dinilai guru (HSK 3 nomor 66–70, HSK 4 nomor 65–70, dan karangan HSK 5) tidak masuk log otomatis.
+
+## Subtitle HSK 6
+
+`hsk6/listening.vtt` adalah file WebVTT biasa dan bisa diedit dengan editor teks apa pun.
+- Baris di atas waktu adalah nomor soal. Teks setelah `|` adalah judul bagian.
+- Awali teks dengan `[?]` untuk menandai kalimat yang perlu dicek. Tanda ini tampil sebagai "⚑ cek".
+- Transkrip saat ini mencakup soal 1–42. Jeda menjawab sekitar 13 detik setelah setiap soal menjadi patokan waktu tiap soal.

@@ -1,5 +1,5 @@
 // Service worker: makes the site installable and lets visited pages open offline.
-const CACHE = 'hsk-sim-v2';
+const CACHE = 'hsk-sim-v3';
 const CORE = ['/', '/log.js', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -17,8 +17,8 @@ self.addEventListener('fetch', e => {
   // Leave form submissions, audio (range requests) and other sites alone.
   if (req.method !== 'GET' || url.origin !== location.origin || url.pathname.endsWith('.mp3')) return;
 
-  if (req.mode === 'navigate') {
-    // Pages: always try the network first so updated tests show up right away.
+  if (req.mode === 'navigate' || url.pathname.endsWith('.vtt')) {
+    // Pages and subtitles: always try the network first so updates show up right away.
     e.respondWith(fetch(req)
       .then(res => { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); return res; })
       .catch(() => caches.match(req).then(r => r || caches.match('/'))));
