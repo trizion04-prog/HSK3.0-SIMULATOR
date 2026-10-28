@@ -31,6 +31,7 @@ a.card:hover,a.card:focus-visible{border-color:var(--on);transform:translateY(-2
 .card ul{margin:12px 0 0;padding-left:18px;color:var(--mute);font-size:.92rem}
 .card .go{display:inline-block;margin-top:14px;font-weight:700;color:var(--on)}
 .card.soon{opacity:.55}
+.tests{display:grid;gap:6px;margin-top:12px}.tests a{display:flex;justify-content:space-between;align-items:center;gap:10px;text-decoration:none;color:var(--on);border:1px solid var(--line);border-radius:6px;padding:8px 12px;font-weight:700}.tests a:hover,.tests a:focus-visible{border-color:var(--on);background:var(--onbg)}.tests a span{color:var(--mute);font-weight:400;font-size:.85rem}.tests a::after{content:"→"}
 .logc{margin-top:14px;display:flex;flex-direction:column;gap:2px;padding:14px 20px}.logc span{color:var(--mute);font-size:.92rem}
 .app{margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:16px 20px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}.app img{width:52px;height:52px;border-radius:12px}.app div{flex:1;min-width:200px}.app p{margin:2px 0 0;color:var(--mute);font-size:.92rem}.app button{font:inherit;font-weight:700;background:var(--on);color:var(--paper);border:0;border-radius:6px;padding:10px 20px;cursor:pointer}
 :focus-visible{outline:3px solid var(--on);outline-offset:2px}
@@ -48,8 +49,9 @@ footer{color:var(--mute);font-size:.85rem;text-align:center;margin-top:36px}
 <ul><li>70 soal · sekitar 83 menit</li><li>Mendengarkan, Membaca, Menulis</li></ul><span class="go">Mulai HSK 3 →</span></a>
 <a class="card" href="hsk4/"><span class="tag">Level 4</span><span class="big zh">HSK 四级</span>
 <ul><li>70 soal · sekitar 81 menit</li><li>Mendengarkan, Membaca, Menulis</li></ul><span class="go">Mulai HSK 4 →</span></a>
-<a class="card" href="hsk5/"><span class="tag">Level 5</span><span class="big zh">HSK 五级</span>
-<ul><li>72 soal · sekitar 105 menit</li><li>Mendengarkan, Membaca, 2 karangan</li></ul><span class="go">Mulai HSK 5 →</span></a>
+<div class="card multi"><span class="tag">Level 5 · 3 tes</span><span class="big zh">HSK 五级</span>
+<ul><li>72 soal · sekitar 105 menit</li><li>Mendengarkan, Membaca, 2 karangan</li></ul>
+<div class="tests"><a href="hsk5/"><b class="zh">样卷</b><span>Ujian contoh resmi</span></a><a href="hsk5/mock1/"><b class="zh">模拟试卷 1</b><span>Mock test 1</span></a><a href="hsk5/mock2/"><b class="zh">模拟试卷 2</b><span>Mock test 2</span></a></div></div>
 <a class="card" href="hsk6/"><span class="tag">Level 6 · Listening</span><span class="big zh">HSK 六级</span>
 <ul><li>Latihan mendengarkan H61330 · 50 soal</li><li>Audio dengan subtitle yang sinkron</li></ul><span class="go">Buka HSK 6 →</span></a>
 </div>

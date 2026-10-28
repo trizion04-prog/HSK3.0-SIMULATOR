@@ -10,6 +10,7 @@ Simulasi ujian HSK online dengan timer, audio listening, dan penilaian otomatis.
 | `hsk3/` | HSK 3: 70 soal, sekitar 83 menit |
 | `hsk4/` | HSK 4: 70 soal, sekitar 81 menit |
 | `hsk5/` | HSK 5: 72 soal, sekitar 105 menit (audio `listening.mp3`, gambar di `img/`) |
+| `hsk5/mock1/`, `hsk5/mock2/` | HSK 5 全真模拟试卷 1 & 2 (Listening aktif otomatis saat `listening.mp3` ditaruh di folder masing-masing) |
 | `hsk6/` | HSK 6 (H61330): latihan mendengarkan dengan subtitle sinkron (`listening.vtt`) |
 | `log/` | Log kesalahan dari semua level, bisa diunduh sebagai CSV |
 
@@ -20,7 +21,7 @@ Setiap peserta mengisi nama sebelum mulai. Saat ujian selesai, hasilnya dikirim 
 - `hasil-hsk2` untuk HSK 2
 - `hasil-hsk3` untuk HSK 3
 - `hasil-hsk4` untuk HSK 4
-- `hasil-hsk5` untuk HSK 5
+- `hasil-hsk5` untuk HSK 5 (样卷), `hasil-hsk5-mock1` dan `hasil-hsk5-mock2` untuk mock test
 
 Hasilnya bisa dilihat di dashboard Netlify, menu **Forms**. Form detection harus aktif.
 
