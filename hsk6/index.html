@@ -32,13 +32,13 @@ button{font:inherit;cursor:pointer}
 .sw{display:flex;gap:14px;flex-wrap:wrap;font-size:.9rem;color:var(--mute)}
 .now{min-height:3.4em;margin-top:6px;padding:8px 12px;background:var(--onbg);border-radius:6px;font-size:1.25rem;line-height:1.55}
 .now small{display:block;font:600 .75rem "Public Sans",sans-serif;color:var(--on)}
-.now.hide .tx{filter:blur(6px);user-select:none}
+.now .tx{line-height:2.2}.now.hide .tx{filter:blur(6px);user-select:none}
 .qb h2{margin:0;font-size:1.05rem;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
 .qb h2 .go{margin-left:auto;border:1px solid var(--on);color:var(--on);background:none;border-radius:6px;padding:3px 10px;font-size:.85rem}
 .sec{font:700 .8rem "Public Sans",sans-serif;color:var(--mute);letter-spacing:.04em;margin:16px 0 4px}
 .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:4px 14px;margin:8px 0;font-size:1rem}
 .opts b{margin-right:6px}
-.cue{display:block;width:100%;text-align:left;border:0;border-left:3px solid transparent;background:none;color:var(--ink);padding:5px 10px;margin:1px 0;border-radius:0 4px 4px 0;font-size:1.05rem;line-height:1.7}
+.cue{display:block;width:100%;text-align:left;border:0;border-left:3px solid transparent;background:none;color:var(--ink);padding:5px 10px;margin:1px 0;border-radius:0 4px 4px 0;font-size:1.1rem;line-height:2.3}
 .cue:hover{background:var(--bg)}
 .cue.on{background:var(--onbg);border-left-color:var(--on)}
 .cue .t{font:.72rem "Public Sans",sans-serif;color:var(--mute);margin-right:8px;font-variant-numeric:tabular-nums}
@@ -52,7 +52,7 @@ button{font:inherit;cursor:pointer}
 <div class="ctl"><button class="pp" id="pp" type="button">▶ Putar</button><button id="bk" type="button" title="Mundur 5 detik">−5 dtk</button><button id="rp" type="button" title="Ulangi kalimat ini">↺ Kalimat</button><button id="fw" type="button" title="Maju 5 detik">+5 dtk</button>
 <select id="sp" title="Kecepatan"><option value=".75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option></select><span class="tm" id="tm">00:00 / 35:26</span></div>
 <input class="seek" id="sk" type="range" min="0" max="2126" step="0.1" value="0" aria-label="Posisi audio">
-<div class="sw"><label><input type="checkbox" id="sub" checked> Tampilkan subtitle</label><label><input type="checkbox" id="fol" checked> Ikuti audio</label></div>
+<div class="sw"><label><input type="checkbox" id="sub" checked> Tampilkan subtitle</label><label><input type="checkbox" id="fol" checked> Ikuti audio</label><label><input type="checkbox" id="pyt" checked> Pinyin</label></div>
 <div class="now zh" id="now"><small id="nowq">Tekan Putar untuk mulai</small><span class="tx" id="nowt"></span></div>
 </div></header>
 <main>
@@ -63,6 +63,7 @@ button{font:inherit;cursor:pointer}
 <div id="list"></div>
 </main>
 <audio id="au" preload="metadata" src="listening.mp3"></audio>
+<script src="/reader.js"></script>
 <script>
 const QS={"1":30.1,"2":106.99,"3":145.03,"4":177.75,"5":212.44,"6":249.91,"7":285.28,"8":318.87,"9":354.28,"10":389.12,"11":424.93,"12":457.29,"13":489.3,"14":523.77,"15":560.27,"16":595.57,"17":777.98,"18":796.91,"19":814.58,"20":832.23,"21":849.19,"22":1018.04,"23":1036.04,"24":1053.66,"25":1072.26,"26":1089.42,"27":1234.39,"28":1252.7,"29":1270.13,"30":1287.27,"31":1304.63,"32":1389.41,"33":1407.03,"34":1425.24,"35":1527.87,"36":1548.1,"37":1566.88,"38":1586.02,"39":1671.9,"40":1690.84,"41":1707.89,"42":1780.65,"43":1800.43,"44":1817.75,"45":1937.9,"46":1955.62,"47":1974.39,"48":1991.71,"49":2069.09,"50":2087.12};
 const OPT={
@@ -90,7 +91,7 @@ function render(){const by={};C.forEach((c,i)=>{c.i=i;(by[c.q]=by[c.q]||[]).push
 for(let q=1;q<=50;q++){if(PARTS[q])h+=`<div class="sec zh">${PARTS[q]}</div>`;const cs=by[q]||[];const lab=cs.find(c=>c.label);
 h+=`<section class="paper qb" id="q${q}"><h2><span>Soal ${q}</span>${lab&&lab.label?`<span class="zh" style="font-weight:400;color:var(--mute);font-size:.9rem">${esc(lab.label)}</span>`:''}<button class="go" type="button" data-t="${QS[q]}">▶ Putar dari sini</button></h2>
 <div class="opts zh">${OPT[q].map((o,i)=>`<span><b>${'ABCD'[i]}</b>${o}</span>`).join('')}</div>
-<div class="tl">${cs.length?cs.map(c=>`<button class="cue zh${c.chk?' chk':''}" type="button" id="c${c.i}" data-t="${c.s}"><span class="t">${fmt(c.s)}</span><span class="x">${esc(c.t)}</span></button>`).join(''):'<p class="miss">Transkrip soal ini belum tersedia. Audio tetap bisa diputar dari sini.</p>'}</div></section>`}
+<div class="tl">${cs.length?cs.map(c=>`<button class="cue zh${c.chk?' chk':''}" type="button" id="c${c.i}" data-t="${c.s}"><span class="t">${fmt(c.s)}</span><span class="x" data-ctx="${esc(c.t)}">${HR.html(c.t)}</span></button>`).join(''):'<p class="miss">Transkrip soal ini belum tersedia. Audio tetap bisa diputar dari sini.</p>'}</div></section>`}
 $('#list').innerHTML=h;applyHide()}
 function applyHide(){const on=$('#sub').checked;$('#now').classList.toggle('hide',!on);document.querySelectorAll('.tl').forEach(t=>t.classList.toggle('hide',!on))}
 function idxAt(t){let lo=0,hi=C.length-1,r=-1;while(lo<=hi){const m=(lo+hi)>>1;if(C[m].s<=t+.05){r=m;lo=m+1}else hi=m-1}return r}
@@ -100,7 +101,7 @@ let i=idxAt(t);if(i>=0&&t>C[i].e+0.6)i=-1;
 if(i!==cur){if(cur>=0)$('#c'+cur)?.classList.remove('on');cur=i;
 if(i>=0){const el=$('#c'+i);el.classList.add('on');if($('#fol').checked&&!au.paused)el.scrollIntoView({block:'center',behavior:'smooth'})}}
 const q=qAt(t);$('#nowq').textContent=t<QS[1]-.5?'Musik pembuka':'Soal '+q+(i<0?(C.some(c=>c.q==q)?' · jeda menjawab':' · transkrip belum tersedia'):'');
-$('#nowt').textContent=i>=0?C[i].t:''}
+const nt=$('#nowt');if(nt.dataset.i!==String(i)){nt.dataset.i=i;nt.innerHTML=i>=0?HR.html(C[i].t):''}}
 let dragging=false;
 $('#pp').onclick=()=>au.paused?au.play():au.pause();
 au.onplay=()=>$('#pp').textContent='❚❚ Jeda';au.onpause=()=>$('#pp').textContent='▶ Putar';
@@ -112,7 +113,8 @@ $('#sk').oninput=e=>{dragging=true;$('#tm').textContent=fmt(+e.target.value)+' /
 $('#sk').onchange=e=>{dragging=false;au.currentTime=+e.target.value};
 $('#sub').onchange=applyHide;
 $('#list').addEventListener('click',e=>{const b=e.target.closest('[data-t]');if(!b)return;au.currentTime=+b.dataset.t;au.play()});
-fetch('listening.vtt').then(r=>r.text()).then(t=>{C=parseVTT(t);render();update()}).catch(()=>{$('#list').innerHTML='<p class="paper">Transkrip gagal dimuat. Periksa koneksi lalu muat ulang halaman.</p>'});
+$('#pyt').onchange=e=>HR.pinyin(e.target.checked);
+HR.load('words.json','HSK 6 · H61330').then(()=>fetch('listening.vtt')).then(r=>r.text()).then(t=>{C=parseVTT(t);render();update()}).catch(()=>{$('#list').innerHTML='<p class="paper">Transkrip gagal dimuat. Periksa koneksi lalu muat ulang halaman.</p>'});
 </script>
 <script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}))</script>
 </body></html>

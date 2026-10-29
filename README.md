@@ -59,3 +59,11 @@ Di halaman hasil setiap ujian, semua soal yang salah masuk ke daftar **Log kesal
 Transkrip listening mock test 1 (dari 听力文本) ada di `hsk5/mock1/transcript.json`: `q` = nomor soal, `spk` = 男/女/问, `s`/`e` = detik di audio (null kalau audionya belum ada).
 Di halaman ujian setiap soal listening punya tombol **Tampilkan subtitle** sendiri; di halaman hasil ada **Review listening** dengan audio yang bisa diputar ulang.
 Waktu subtitle soal 1–16 disinkronkan otomatis dengan speech recognition. Audio soal 17–35 belum tersedia.
+
+## Subtitle interaktif & kosakata
+
+Di subtitle listening (HSK 5 mock 1 dan HSK 6) setiap kata bisa diketuk: muncul pinyin, arti, tombol 🔊 (suara browser), dan **Simpan kata**.
+- Pemotongan kata, pinyin, dan arti disiapkan sebelumnya di `words.json` tiap tes (jieba + pypinyin + CC-CEDICT). Arti dalam bahasa Inggris.
+- Kode bersama ada di `reader.js`. Kata tersimpan di perangkat (`localStorage`, kunci `hsk-words`) dan tampil di `/kata/` (daftar, latihan kartu, unduh CSV).
+- Kamus: CC-CEDICT, lisensi CC BY-SA 4.0 (https://cc-cedict.org).
+- Di bagian listening ada tombol ⏯ (jeda/putar), kecepatan 0.75×–1.25×, dan sakelar pinyin. Timer berhenti saat audio dijeda.

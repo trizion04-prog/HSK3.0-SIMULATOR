@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kosakata Tersimpan</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0e5a63">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9edf1;--paper:#fff;--ink:#17212b;--mute:#5b6773;--line:#c8d0d8;--on:#0e5a63;--onbg:#dff0f2;--red:#b42318;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161c;--paper:#18212a;--ink:#e8edf1;--mute:#9aa7b3;--line:#33404c;--on:#5cc4cf;--onbg:#173238;--red:#ff8a7a}}
+:root[data-theme="dark"]{--bg:#10161c;--paper:#18212a;--ink:#e8edf1;--mute:#9aa7b3;--line:#33404c;--on:#5cc4cf;--onbg:#173238;--red:#ff8a7a}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Public Sans",system-ui,sans-serif}
+.zh{font-family:"Noto Serif SC","Songti SC","SimSun",serif}
+main{max-width:820px;margin:0 auto;padding:20px 16px 60px}a{color:var(--on)}
+h1{margin:.3em 0 .1em}.note{color:var(--mute);margin:0 0 14px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+.bar input{flex:1 1 200px;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
+.bar button{font:inherit;font-weight:700;border-radius:6px;padding:8px 14px;cursor:pointer;border:1px solid var(--on);background:none;color:var(--on)}
+.bar .p{background:var(--on);color:var(--paper)}
+.list{display:grid;gap:8px}
+.it{display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:start;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.it .w{font:700 1.7rem/1.2 "Noto Serif SC",serif}.it .py{color:var(--on);font-weight:600}.it .d{color:var(--ink)}.it .m{color:var(--mute);font-size:.82rem}
+.it .act{display:flex;flex-direction:column;gap:6px}.it .act button{border:1px solid var(--line);background:none;color:var(--ink);border-radius:6px;padding:4px 10px;cursor:pointer;font:inherit;font-size:.9rem}
+.it .act .del{color:var(--red)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:28px 18px;text-align:center;min-height:200px;display:flex;flex-direction:column;justify-content:center;gap:8px;cursor:pointer}
+.card .w{font:700 3rem "Noto Serif SC",serif}.card .hid{visibility:hidden}
+.empty{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:20px;text-align:center;color:var(--mute)}
+:focus-visible{outline:3px solid var(--on);outline-offset:2px}
+footer{color:var(--mute);font-size:.8rem;margin-top:24px}
+</style></head><body>
+<main>
+<a href="/">← Kembali ke pilih level</a>
+<h1>Kosakata tersimpan</h1>
+<p class="note">Kata yang kamu simpan dari subtitle listening. Tersimpan di perangkat ini; unduh CSV untuk cadangan atau untuk dibuka di Excel / Google Sheets.</p>
+<div class="bar"><input id="q" type="search" placeholder="Cari hanzi, pinyin, atau arti…"><button id="fc" type="button">Latihan kartu</button><button class="p" id="csv" type="button">Unduh CSV</button></div>
+<div id="out"></div>
+<footer>Arti kata dari CC-CEDICT (CC BY-SA 4.0), dalam bahasa Inggris.</footer>
+</main>
+<script src="/reader.js"></script>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let mode='list',fi=0,flip=false;
+function view(){const all=HR.saved(),q=$('#q').value.trim().toLowerCase();
+const L=all.filter(x=>!q||[x.w,x.p,x.d].join(' ').toLowerCase().includes(q));
+if(!all.length){$('#out').innerHTML='<div class="empty">Belum ada kata. Buka subtitle di soal listening, ketuk sebuah kata, lalu tekan <b>＋ Simpan kata</b>.</div>';return}
+if(mode=='card'){if(!L.length){$('#out').innerHTML='<div class="empty">Tidak ada kata untuk pencarian ini.</div>';return}
+fi=(fi+L.length)%L.length;const x=L[fi];
+$('#out').innerHTML=`<div class="card" id="card"><div class="w zh">${esc(x.w)}</div><div class="${flip?'':'hid'}"><div class="py" style="color:var(--on);font-weight:600">${esc(x.p)}</div><div>${esc(x.d)}</div></div><div class="note" style="margin:0">${flip?'':'Ketuk untuk melihat arti'}</div></div>
+<div class="bar" style="justify-content:center"><button id="pv" type="button">← Sebelumnya</button><button id="sp1" type="button">🔊</button><button id="nx" type="button">Berikutnya →</button></div><p class="note" style="text-align:center">${fi+1} / ${L.length}</p>`;
+$('#card').onclick=()=>{flip=!flip;view()};$('#pv').onclick=()=>{fi--;flip=false;view()};$('#nx').onclick=()=>{fi++;flip=false;view()};$('#sp1').onclick=()=>HR.speak(x.w);return}
+$('#out').innerHTML=`<p class="note">${all.length} kata tersimpan${q?` · ${L.length} cocok`:''}</p><div class="list">${L.map(x=>`<div class="it"><div class="w zh">${esc(x.w)}</div><div><div class="py">${esc(x.p)}</div><div class="d">${esc(x.d)}</div><div class="m">${esc(x.src)}${x.date?' · '+esc(x.date):''}</div></div><div class="act"><button data-sp="${esc(x.w)}" type="button">🔊</button><button class="del" data-del="${esc(x.w)}" type="button">Hapus</button></div></div>`).join('')}</div>`}
+$('#out').addEventListener('click',e=>{const s=e.target.dataset.sp,d=e.target.dataset.del;if(s)HR.speak(s);if(d){HR.store(HR.saved().filter(x=>x.w!==d));view()}});
+$('#q').oninput=()=>{fi=0;view()};
+$('#fc').onclick=()=>{mode=mode=='list'?'card':'list';$('#fc').textContent=mode=='list'?'Latihan kartu':'Daftar kata';fi=0;flip=false;view()};
+$('#csv').onclick=()=>{const a=HR.saved();if(!a.length)return;const q=v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+const csv='﻿'+['hanzi,pinyin,meaning,source,date'].concat(a.map(x=>[x.w,x.p,x.d,x.src,x.date].map(q).join(','))).join('\n');
+const l=document.createElement('a');l.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));l.download='kosakata-hsk.csv';document.body.appendChild(l);l.click();l.remove()};
+view();
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+</script>
+</body></html>
