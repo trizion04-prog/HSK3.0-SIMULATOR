@@ -75,3 +75,11 @@ Di subtitle listening (HSK 5 mock 1 dan HSK 6) setiap kata bisa diketuk: muncul 
 - **Impor & ekspor**: tombol satu ketuk untuk kosakata Dengdeng (`kata/decks/dengdeng.json`, 1.502 kata dari ekspor 30-10-2026), impor CSV apa pun (`hanzi, pinyin, meaning` + kolom opsional), dan unduh CSV lengkap dengan jadwal review.
 - Saat impor, status `Mastered` dijadwalkan merata dalam 30 hari, `Learning` jatuh tempo hari ini, `Not started` menjadi kata baru.
 - Data tersimpan di `localStorage` (`hsk-words`, `hsk-srs-cfg`, `hsk-srs-day`) di perangkat masing-masing.
+
+## Pilih bagian & sertifikat latihan
+
+- Di halaman awal setiap tes (HSK 1–5, termasuk mock test HSK 5) peserta memilih **Lengkap**, **Listening saja**, **Reading saja**, atau **Menulis saja**. Hanya bagian yang dipilih yang dijalankan dan dinilai; Listening tidak bisa dipilih kalau audionya belum ada.
+- Nilai tiap bagian = persentase jawaban benar × 100, dibulatkan. Total = jumlah nilai bagian (misalnya 300 untuk tes lengkap 3 bagian). Lulus latihan ≥ 60%.
+- Bagian menulis yang tidak bisa dinilai otomatis dinilai mandiri dulu: centang **Sesuai** (HSK 3 no. 66–70, HSK 4 no. 65–69) dan rubrik karangan (jumlah karakter otomatis + topik, tata bahasa, kosakata), lalu **Terbitkan sertifikat**.
+- Sertifikat digambar di canvas (`cert.js`), bisa diunduh sebagai PNG, dan tersimpan di `localStorage` (`hsk-certs`). Semua sertifikat ada di `/sertifikat/`, dikelompokkan per level HSK.
+- Pengaturan bagian per halaman ada di panggilan `CERT.setup(...)` di setiap `index.html` (dibuat oleh `certpatch.py` di folder kerja).

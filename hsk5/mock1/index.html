@@ -73,6 +73,7 @@ table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{padding:5px 8px
 <input name="bot-field"><input name="nama"><input name="kontak"><input name="mendengarkan"><input name="membaca"><input name="total_otomatis"><input name="mulai"><input name="selesai"><input name="durasi_menit"><textarea name="jawaban_1_70"></textarea><textarea name="esai_71"></textarea><textarea name="esai_72"></textarea>
 </form>
 <main id="app"></main>
+<script src="/cert.js"></script>
 <script src="/reader.js"></script>
 <audio id="au" preload="auto"></audio>
 <script>
@@ -106,6 +107,7 @@ function REV(){let h='<section class="paper rv"><h2>Review listening</h2><p clas
 for(let n=1;n<=35;n++){h+=`<div class="rvq"><h3>Soal ${n}</h3><p class="note">Jawabanmu: <b>${A[n]||'–'}</b> · Kunci: <b>${k(n)}</b>${n>LQ?' · tidak dinilai':''}</p>${trHTML(n,true)}</div>`}
 return h+'</section>'}
 const ST=[{n:'听力 · Mendengarkan',a:1,b:35},{n:'阅读 · Membaca',a:36,b:70,min:35},{n:'写作 · Menulis',a:71,b:72,min:40}];
+CERT.setup({level:5,title:'HSK 5 · 模拟试卷 1',sections:[{key:'L',zh:'听力',en:'Listening',stage:0,items:()=>CERT.items(1,LQ),available:()=>LQ>0},{key:'R',zh:'阅读',en:'Reading',stage:1,items:()=>CERT.items(36,70)},{key:'W',zh:'书写',en:'Writing',stage:2,items:()=>[...CERT.items(71,71,'essay',100),...CERT.items(72,72,'essay',200)]}]});
 const $=s=>document.querySelector(s),app=$('#app'),au=$('#au'),A={};
 let pz=0,AUD=false,AUDQ=16,LQ=0,stage=-1,end=0,timer,U={nama:'',kontak:''},T0=0;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -116,9 +118,9 @@ function intro(){app.innerHTML=`<a class="back" href="/">← Pilih level lain</a
 <p>Simulasi ujian · 72 soal · sekitar 105 menit</p>
 <ol><li><b>Mendengarkan</b> (soal 1–35): ${LQ>=35?`audio diputar sekali dan tidak bisa dijeda, lalu 5 menit mengisi jawaban.`:LQ?`audio saat ini baru mencakup <b>soal 1–${LQ}</b>. Soal ${LQ+1}–35 tetap ditampilkan, tapi belum ada audionya dan tidak dinilai.`:`<b>audio untuk tes ini belum tersedia.</b> Soal 1–35 tetap ditampilkan supaya lengkap (10 menit), tapi tidak dinilai.`}</li><li><b>Membaca</b> (36–70): 35 menit.</li><li><b>Menulis</b> (71–72): 40 menit, dua karangan (minimal 100 dan 200 karakter).</li><li>Waktu habis, bagian berpindah otomatis. Bagian yang sudah lewat tidak bisa dibuka lagi.</li><li>Pakai headphone dan pastikan volume sudah pas sebelum mulai.</li></ol>
 <div class="who"><label>Nama lengkap<input id="nm" autocomplete="name" required></label><label>WhatsApp / email (opsional)<input id="kt" autocomplete="email"></label></div>
-<button class="go" id="start" disabled>Mulai ujian</button></section>`;
+${CERT.picker()}<button class="go" id="start" disabled>Mulai ujian</button></section>`;
 const nm=$('#nm'),kt=$('#kt'),st=$('#start');nm.oninput=()=>st.disabled=!nm.value.trim();
-st.onclick=()=>{U={nama:nm.value.trim(),kontak:kt.value.trim()};T0=Date.now();run(0)}}
+st.onclick=()=>{U={nama:nm.value.trim(),kontak:kt.value.trim()};T0=Date.now();CERT.start();run(CERT.first())}}
 function qHTML(n,ord){
 if(n<=35)return `<div class="q" id="q${n}"><b class="no">${n}</b><div class="opts">${LO[n].map((o,i)=>btn(n,'ABCD'[i],o)).join('')}</div>${trHTML(n,false)}</div>`;
 if(ord)return `<div class="q" id="q${n}"><b class="no">${n}</b><span class="t">Paragraf ke-${n-(n>50?50:45)}</span><div class="opts l">${'ABCDE'.split('').map(v=>btn(n,v)).join('')}</div></div>`;
@@ -142,7 +144,7 @@ clearInterval(timer);timer=setInterval(tick,500);tick()}
 function tick(){const s=Math.max(0,Math.round((end-(stage==0&&pz?pz:Date.now()))/1000)),t=$('#tm');if(!t)return;t.textContent=fmt(s);t.classList.toggle('low',s<300);
 const lab=$('#lab');if(stage==0&&!AUD){lab.textContent='Audio belum tersedia · tidak dinilai'}else if(stage==0){lab.textContent=au.ended?'Audio selesai. Isi dan periksa jawabanmu.':'Audio sedang diputar'}else lab.textContent='Sisa waktu bagian ini';
 if(s<=0)next()}
-function next(){pz=0;au.pause();clearInterval(timer);stage<2?run(stage+1):result()}
+function next(){pz=0;au.pause();clearInterval(timer);CERT.after(stage)!=null?run(CERT.after(stage)):result()}
 app.addEventListener('click',e=>{const tb=e.target.closest('.trb');if(tb){const l=tb.nextElementSibling;l.hidden=!l.hidden;tb.classList.toggle('on',!l.hidden);tb.textContent=(l.hidden?'Tampilkan':'Sembunyikan')+' subtitle';return}
 const cp=e.target.closest('.cpl');if(cp){au.currentTime=+cp.dataset.s;au.play();return}
 const cu=e.target.closest('.cue.click');if(cu){au.currentTime=+cu.dataset.s;au.play();return}
@@ -161,7 +163,7 @@ app.innerHTML=`<section class="paper" id="res"><h2>Hasil ujian</h2><div class="s
 <section class="paper"><h2>Karangan</h2>${es(71)}${es(72)}</section>
 ${AUD?REV():''}<section class="paper"><h2>Lembar jawaban 1–70</h2><div class="tw"><table><thead><tr><th>No</th><th>Jawabanmu</th><th>Kunci</th><th>Hasil</th></tr></thead><tbody>${rows}</tbody></table></div><p><button class="go" onclick="location.reload()">Ulangi ujian</button></p></section>`;
 scrollTo(0,0);send(c1,c2);if(AUD){au.pause();au.currentTime=0;au.controls=true;$('#rvp').appendChild(au)}
-HSKLog.render($('#res'),{level:'HSK 5 · Mock 1',name:U.nama,items:R(1,70).filter(n=>(n>35||n<=LQ)&&!ok(n)).map(n=>({q:n,section:(n<=35?'Mendengarkan':'Membaca')+' · Bagian '+(n<=19?1:n<=35?2:n<=45?1:n<=55?2:3),text:n>35&&RQ[n]?RQ[n][0]:'',my:A[n],key:k(n)}))})}
+CERT.finish();HSKLog.render($('#res'),{level:'HSK 5 · Mock 1',name:U.nama,items:R(1,70).filter(n=>(n>35||n<=LQ)&&!ok(n)).map(n=>({q:n,section:(n<=35?'Mendengarkan':'Membaca')+' · Bagian '+(n<=19?1:n<=35?2:n<=45?1:n<=55?2:3),text:n>35&&RQ[n]?RQ[n][0]:'',my:A[n],key:k(n)}))})}
 function send(c1,c2){const t1=Date.now(),
 d={'form-name':'hasil-hsk5-mock1',nama:U.nama,kontak:U.kontak,mendengarkan:LQ?c1+'/'+LQ:'-',membaca:c2+'/35',total_otomatis:(c1+c2)+'/'+(LQ+35),
 mulai:new Date(T0).toLocaleString('id-ID'),selesai:new Date(t1).toLocaleString('id-ID'),durasi_menit:String(Math.round((t1-T0)/60000)),

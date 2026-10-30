@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sertifikat Saya</title>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0e5a63">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Public+Sans:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9edf1;--paper:#fff;--ink:#17212b;--mute:#5b6773;--line:#c8d0d8;--on:#0e5a63;--onbg:#dff0f2;--red:#b42318;--ok:#1b7a3d;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161c;--paper:#18212a;--ink:#e8edf1;--mute:#9aa7b3;--line:#33404c;--on:#5cc4cf;--onbg:#173238;--red:#ff8a7a;--ok:#6fd08c}}
+:root[data-theme="dark"]{--bg:#10161c;--paper:#18212a;--ink:#e8edf1;--mute:#9aa7b3;--line:#33404c;--on:#5cc4cf;--onbg:#173238;--red:#ff8a7a;--ok:#6fd08c}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Public Sans",system-ui,sans-serif}
+.zh{font-family:"Noto Serif SC","Songti SC","SimSun",serif}
+main{max-width:900px;margin:0 auto;padding:20px 16px 60px}a{color:var(--on)}
+h1{margin:.3em 0 .1em}.note{color:var(--mute);margin:0 0 12px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.tabs button{font:inherit;font-weight:700;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:20px;padding:6px 14px;cursor:pointer}
+.tabs button.on{background:var(--on);border-color:var(--on);color:var(--paper)}.tabs small{opacity:.75;font-weight:400}
+h2{font-size:1.1rem;margin:22px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.ce{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.ce canvas{width:100%;height:auto;display:block;background:#f6f8fb;cursor:zoom-in}
+.ce .in{padding:10px 12px;display:grid;gap:2px}.ce .sc{font-size:1.4rem;font-weight:800}.ce .pass{color:var(--ok)}.ce .m{color:var(--mute);font-size:.85rem}
+.ce .act{display:flex;gap:6px;padding:0 12px 12px}.ce .act button{flex:1;font:inherit;font-weight:700;border-radius:6px;padding:7px;cursor:pointer;border:1px solid var(--on);background:none;color:var(--on)}
+.ce .act .p{background:var(--on);color:var(--paper)}.ce .act .d{flex:0 0 auto;border-color:var(--line);color:var(--red)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}.st{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px}.st b{display:block;font-size:1.4rem}
+.empty{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:20px;text-align:center;color:var(--mute)}
+dialog{border:0;border-radius:12px;padding:0;max-width:min(94vw,560px);background:var(--paper)}dialog::backdrop{background:rgba(0,0,0,.6)}
+dialog canvas{width:100%;height:auto;display:block}dialog .act{display:flex;gap:8px;padding:10px}dialog button{flex:1;font:inherit;font-weight:700;border-radius:6px;padding:9px;cursor:pointer;border:1px solid var(--on);background:none;color:var(--on)}dialog .p{background:var(--on);color:var(--paper)}
+:focus-visible{outline:3px solid var(--on);outline-offset:2px}
+</style></head><body>
+<main>
+<a href="/">← Kembali ke pilih level</a>
+<h1>🏅 Sertifikat saya</h1>
+<p class="note">Sertifikat latihan dari setiap tes yang kamu selesaikan, per level HSK. Tersimpan di perangkat ini. Unduh gambarnya untuk dibagikan atau disimpan.</p>
+<div id="stats"></div>
+<div class="tabs" id="tabs"></div>
+<div id="out"></div>
+<dialog id="dlg"><canvas id="big"></canvas><div class="act"><button class="p" id="bdl" type="button">Unduh</button><button id="bx" type="button">Tutup</button></div></dialog>
+</main>
+<script src="/cert.js"></script>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let lv=0;
+const modeLbl=c=>c.mode=='full'?'Lengkap':CERT.MODE[c.mode][1];
+function view(){const all=CERT.certs();
+ const levels=[...new Set(all.map(c=>c.level))].sort();
+ const best=all.length?Math.max(...all.map(c=>Math.round(100*c.total/c.max))):0;
+ $('#stats').innerHTML=all.length?`<div class="stats"><div class="st"><b>${all.length}</b>sertifikat</div><div class="st"><b>${all.filter(c=>c.total>=c.max*.6).length}</b>lulus latihan (≥ 60%)</div><div class="st"><b>${best}%</b>nilai terbaik</div><div class="st"><b>${levels.length}</b>level HSK</div></div>`:'';
+ $('#tabs').innerHTML=all.length?[0,...levels].map(l=>`<button type="button" data-l="${l}" class="${l==lv?'on':''}">${l?'HSK '+l:'Semua'} <small>${l?all.filter(c=>c.level==l).length:all.length}</small></button>`).join(''):'';
+ if(!all.length){$('#out').innerHTML='<div class="empty">Belum ada sertifikat. Selesaikan tes HSK mana pun, lengkap atau per bagian (listening, reading, atau menulis), untuk mendapatkan sertifikat latihan.</div>';return}
+ const show=(lv?[lv]:levels);
+ $('#out').innerHTML=show.map(l=>{const L=all.filter(c=>c.level==l);if(!L.length)return '';
+  return `<h2>HSK ${l} <span class="zh" style="color:var(--mute);font-weight:400">${['','一','二','三','四','五','六'][l]||''}级</span></h2><div class="grid">${L.map(c=>{const pc=Math.round(100*c.total/c.max);return `<div class="ce"><canvas data-id="${c.id}" width="10" height="10" aria-label="Sertifikat ${esc(c.title)}"></canvas><div class="in"><div class="sc ${pc>=60?'pass':''}">${c.total}/${c.max} · ${pc}%</div><div><b>${esc(c.title)}</b> · ${modeLbl(c)}</div><div class="m">${esc(c.name)} · ${new Date(c.date).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div></div><div class="act"><button class="p" data-dl="${c.id}" type="button">Unduh</button><button data-open="${c.id}" type="button">Lihat</button><button class="d" data-del="${c.id}" type="button" aria-label="Hapus">✕</button></div></div>`}).join('')}</div>`}).join('');
+ document.querySelectorAll('.ce canvas').forEach(cv=>CERT.draw(all.find(c=>c.id==cv.dataset.id),cv))}
+$('#tabs').onclick=e=>{const b=e.target.closest('[data-l]');if(b){lv=+b.dataset.l;view()}};
+$('#out').onclick=e=>{const t=e.target,all=CERT.certs();
+ const id=t.dataset.dl||t.dataset.open||t.dataset.del||(t.tagName=='CANVAS'&&t.dataset.id);if(!id)return;const c=all.find(x=>x.id==id);
+ if(t.dataset.dl)CERT.download(c,t.closest('.ce').querySelector('canvas'));
+ else if(t.dataset.del){if(confirm('Hapus sertifikat ini?')){CERT.store(all.filter(x=>x.id!=id));view()}}
+ else{const cv=$('#big');CERT.draw(c,cv).then(()=>{$('#bdl').onclick=()=>CERT.download(c,cv);$('#dlg').showModal()})}};
+$('#bx').onclick=()=>$('#dlg').close();
+view();
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+</script>
+</body></html>

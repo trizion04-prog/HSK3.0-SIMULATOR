@@ -66,6 +66,7 @@ table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{padding:5px 8px
 <input name="bot-field"><input name="nama"><input name="kontak"><input name="mendengarkan"><input name="membaca"><input name="total_otomatis"><input name="mulai"><input name="selesai"><input name="durasi_menit"><textarea name="jawaban_1_70"></textarea><textarea name="esai_71"></textarea><textarea name="esai_72"></textarea>
 </form>
 <main id="app"></main>
+<script src="/cert.js"></script>
 <audio id="au" preload="auto" src="listening.mp3"></audio>
 <script>
 const KEY=('BDABCBCADCBBACDCADB'+'CACCBADDCDBDCAAB'+'BACCBDCBDA'+'CBEDACAEDB'+'ABBADACADDCCDDB').split('');
@@ -97,6 +98,7 @@ const B=[
 {sec:2,title:'第 71 题：看图写作',note:'请根据下面四张图，写一篇不少于 100 字的作文，写出发生在李明和伙伴们身上的故事。',img:'img/q71.jpg',es:71,min:100},
 {sec:2,title:'第 72 题：话题作文',note:'尝试可能会成功，也可能会失败，但不去试一试就永远不会成功。请写一篇不少于 200 字的作文，分享你曾经做过的一次尝试，以及你尝试后的感受。',es:72,min:200}];
 const ST=[{n:'听力 · Mendengarkan',a:1,b:35},{n:'阅读 · Membaca',a:36,b:70,min:35},{n:'写作 · Menulis',a:71,b:72,min:40}];
+CERT.setup({level:5,title:'HSK 5 · 样卷',sections:[{key:'L',zh:'听力',en:'Listening',stage:0,items:()=>CERT.items(1,35)},{key:'R',zh:'阅读',en:'Reading',stage:1,items:()=>CERT.items(36,70)},{key:'W',zh:'书写',en:'Writing',stage:2,items:()=>[...CERT.items(71,71,'essay',100),...CERT.items(72,72,'essay',200)]}]});
 const $=s=>document.querySelector(s),app=$('#app'),au=$('#au'),A={};
 let stage=-1,end=0,timer,U={nama:'',kontak:''},T0=0;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -107,9 +109,9 @@ function intro(){app.innerHTML=`<a class="back" href="../">← Pilih level lain<
 <p>Simulasi ujian · 72 soal · sekitar 105 menit</p>
 <ol><li><b>Mendengarkan</b> (soal 1–35): audio sekitar 27 menit diputar sekali dan tidak bisa dijeda, lalu 5 menit mengisi jawaban.</li><li><b>Membaca</b> (36–70): 35 menit.</li><li><b>Menulis</b> (71–72): 40 menit, dua karangan (minimal 100 dan 200 karakter).</li><li>Waktu habis, bagian berpindah otomatis. Bagian yang sudah lewat tidak bisa dibuka lagi.</li><li>Pakai headphone dan pastikan volume sudah pas sebelum mulai.</li></ol>
 <div class="who"><label>Nama lengkap<input id="nm" autocomplete="name" required></label><label>WhatsApp / email (opsional)<input id="kt" autocomplete="email"></label></div>
-<button class="go" id="start" disabled>Mulai ujian</button></section>`;
+${CERT.picker()}<button class="go" id="start" disabled>Mulai ujian</button></section>`;
 const nm=$('#nm'),kt=$('#kt'),st=$('#start');nm.oninput=()=>st.disabled=!nm.value.trim();
-st.onclick=()=>{U={nama:nm.value.trim(),kontak:kt.value.trim()};T0=Date.now();run(0)}}
+st.onclick=()=>{U={nama:nm.value.trim(),kontak:kt.value.trim()};T0=Date.now();CERT.start();run(CERT.first())}}
 function qHTML(n,ord){
 if(n<=35)return `<div class="q" id="q${n}"><b class="no">${n}</b><div class="opts">${LO[n].map((o,i)=>btn(n,'ABCD'[i],o)).join('')}</div></div>`;
 if(ord)return `<div class="q" id="q${n}"><b class="no">${n}</b><span class="t">Paragraf ke-${n-(n>50?50:45)}</span><div class="opts l">${'ABCDE'.split('').map(v=>btn(n,v)).join('')}</div></div>`;
@@ -133,7 +135,7 @@ clearInterval(timer);timer=setInterval(tick,500);tick()}
 function tick(){const s=Math.max(0,Math.round((end-Date.now())/1000)),t=$('#tm');if(!t)return;t.textContent=fmt(s);t.classList.toggle('low',s<300);
 const lab=$('#lab');if(stage==0){lab.textContent=au.ended?'Audio selesai. Isi dan periksa jawabanmu.':'Audio sedang diputar'}else lab.textContent='Sisa waktu bagian ini';
 if(s<=0)next()}
-function next(){au.pause();clearInterval(timer);stage<2?run(stage+1):result()}
+function next(){au.pause();clearInterval(timer);CERT.after(stage)!=null?run(CERT.after(stage)):result()}
 app.addEventListener('click',e=>{const b=e.target.closest('.ch');if(b){const n=b.dataset.n;A[n]=A[n]==b.dataset.v?'':b.dataset.v;document.querySelectorAll(`.ch[data-n="${n}"]`).forEach(x=>x.classList.toggle('on',x.dataset.v==A[n]));mark(n);return}
 const g=e.target.closest('[data-go]');if(g)$('#q'+g.dataset.go)?.scrollIntoView({behavior:'smooth',block:'start'})});
 app.addEventListener('input',e=>{if(e.target.classList.contains('es')){const n=e.target.dataset.n;A[n]=e.target.value;$('#wc'+n).textContent=zc(A[n]);mark(n)}});
@@ -148,7 +150,7 @@ app.innerHTML=`<section class="paper" id="res"><h2>Hasil ujian</h2><div class="s
 <section class="paper"><h2>Karangan</h2>${es(71)}${es(72)}</section>
 <section class="paper"><h2>Lembar jawaban 1–70</h2><div class="tw"><table><thead><tr><th>No</th><th>Jawabanmu</th><th>Kunci</th><th>Hasil</th></tr></thead><tbody>${rows}</tbody></table></div><p><button class="go" onclick="location.reload()">Ulangi ujian</button></p></section>`;
 scrollTo(0,0);send(c1,c2);
-HSKLog.render($('#res'),{level:'HSK 5',name:U.nama,items:R(1,70).filter(n=>!ok(n)).map(n=>({q:n,section:(n<=35?'Mendengarkan':'Membaca')+' · Bagian '+(n<=19?1:n<=35?2:n<=45?1:n<=55?2:3),text:n>35&&RQ[n]?RQ[n][0]:'',my:A[n],key:k(n)}))})}
+CERT.finish();HSKLog.render($('#res'),{level:'HSK 5',name:U.nama,items:R(1,70).filter(n=>!ok(n)).map(n=>({q:n,section:(n<=35?'Mendengarkan':'Membaca')+' · Bagian '+(n<=19?1:n<=35?2:n<=45?1:n<=55?2:3),text:n>35&&RQ[n]?RQ[n][0]:'',my:A[n],key:k(n)}))})}
 function send(c1,c2){const t1=Date.now(),
 d={'form-name':'hasil-hsk5',nama:U.nama,kontak:U.kontak,mendengarkan:c1+'/35',membaca:c2+'/35',total_otomatis:(c1+c2)+'/70',
 mulai:new Date(T0).toLocaleString('id-ID'),selesai:new Date(t1).toLocaleString('id-ID'),durasi_menit:String(Math.round((t1-T0)/60000)),
