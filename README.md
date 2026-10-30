@@ -67,3 +67,11 @@ Di subtitle listening (HSK 5 mock 1 dan HSK 6) setiap kata bisa diketuk: muncul 
 - Kode bersama ada di `reader.js`. Kata tersimpan di perangkat (`localStorage`, kunci `hsk-words`) dan tampil di `/kata/` (daftar, latihan kartu, unduh CSV).
 - Kamus: CC-CEDICT, lisensi CC BY-SA 4.0 (https://cc-cedict.org).
 - Di bagian listening ada tombol ⏯ (jeda/putar), kecepatan 0.75×–1.25×, dan sakelar pinyin. Timer berhenti saat audio dijeda.
+
+## Kosakata & Review (`/kata/`)
+
+- **Review**: pengulangan berjarak gaya SM-2. Tombol Lupa / Sulit / Bisa / Mudah menentukan kapan kata muncul lagi. Kata baru dibatasi per hari (0–50), bisa difilter per deck, dan bisa dibalik (arti → 汉字). Keyboard: spasi = lihat jawaban, 1–4 = nilai.
+- **Daftar kata**: cari, filter deck dan status (Baru / Belajar / Jatuh tempo / Hafal), tanggal review berikutnya.
+- **Impor & ekspor**: tombol satu ketuk untuk kosakata Dengdeng (`kata/decks/dengdeng.json`, 1.502 kata dari ekspor 30-10-2026), impor CSV apa pun (`hanzi, pinyin, meaning` + kolom opsional), dan unduh CSV lengkap dengan jadwal review.
+- Saat impor, status `Mastered` dijadwalkan merata dalam 30 hari, `Learning` jatuh tempo hari ini, `Not started` menjadi kata baru.
+- Data tersimpan di `localStorage` (`hsk-words`, `hsk-srs-cfg`, `hsk-srs-day`) di perangkat masing-masing.

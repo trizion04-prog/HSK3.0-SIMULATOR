@@ -1,63 +1,162 @@
 <!doctype html>
 <html lang="id"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Kosakata Tersimpan</title>
+<title>Kosakata & Review</title>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#0e5a63">
 <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Public+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#e9edf1;--paper:#fff;--ink:#17212b;--mute:#5b6773;--line:#c8d0d8;--on:#0e5a63;--onbg:#dff0f2;--red:#b42318;box-sizing:border-box}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161c;--paper:#18212a;--ink:#e8edf1;--mute:#9aa7b3;--line:#33404c;--on:#5cc4cf;--onbg:#173238;--red:#ff8a7a}}
-:root[data-theme="dark"]{--bg:#10161c;--paper:#18212a;--ink:#e8edf1;--mute:#9aa7b3;--line:#33404c;--on:#5cc4cf;--onbg:#173238;--red:#ff8a7a}
+:root{--bg:#e9edf1;--paper:#fff;--ink:#17212b;--mute:#5b6773;--line:#c8d0d8;--on:#0e5a63;--onbg:#dff0f2;--red:#b42318;--ok:#1b7a3d;--warn:#8a5a00;box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10161c;--paper:#18212a;--ink:#e8edf1;--mute:#9aa7b3;--line:#33404c;--on:#5cc4cf;--onbg:#173238;--red:#ff8a7a;--ok:#6fd08c;--warn:#f1c56b}}
+:root[data-theme="dark"]{--bg:#10161c;--paper:#18212a;--ink:#e8edf1;--mute:#9aa7b3;--line:#33404c;--on:#5cc4cf;--onbg:#173238;--red:#ff8a7a;--ok:#6fd08c;--warn:#f1c56b}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Public Sans",system-ui,sans-serif}
 .zh{font-family:"Noto Serif SC","Songti SC","SimSun",serif}
 main{max-width:820px;margin:0 auto;padding:20px 16px 60px}a{color:var(--on)}
-h1{margin:.3em 0 .1em}.note{color:var(--mute);margin:0 0 14px}
-.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
-.bar input{flex:1 1 200px;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}
-.bar button{font:inherit;font-weight:700;border-radius:6px;padding:8px 14px;cursor:pointer;border:1px solid var(--on);background:none;color:var(--on)}
-.bar .p{background:var(--on);color:var(--paper)}
-.list{display:grid;gap:8px}
-.it{display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:start;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
-.it .w{font:700 1.7rem/1.2 "Noto Serif SC",serif}.it .py{color:var(--on);font-weight:600}.it .d{color:var(--ink)}.it .m{color:var(--mute);font-size:.82rem}
-.it .act{display:flex;flex-direction:column;gap:6px}.it .act button{border:1px solid var(--line);background:none;color:var(--ink);border-radius:6px;padding:4px 10px;cursor:pointer;font:inherit;font-size:.9rem}
+h1{margin:.3em 0 .1em}.note{color:var(--mute);margin:0 0 12px}
+button,select,input{font:inherit}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin:14px 0}
+.tabs button{border:0;background:none;color:var(--mute);padding:10px 14px;font-weight:700;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.tabs button.on{color:var(--on);border-bottom-color:var(--on)}.tabs b{background:var(--red);color:#fff;border-radius:10px;padding:0 7px;font-size:.75rem;margin-left:4px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:12px}
+.st{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px}.st b{display:block;font-size:1.5rem}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+.row select,.row input{padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--ink)}.row input[type=search]{flex:1 1 180px}
+.btn{border:1px solid var(--on);background:none;color:var(--on);border-radius:8px;padding:9px 16px;font-weight:700;cursor:pointer}
+.btn.p{background:var(--on);color:var(--paper)}.btn.d{border-color:var(--red);color:var(--red)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:26px 18px;text-align:center;min-height:240px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.card .w{font:700 3.2rem/1.2 "Noto Serif SC",serif}.card .m{font-size:1.25rem}.card .py{color:var(--on);font-weight:700;font-size:1.25rem}
+.card .src{color:var(--mute);font-size:.85rem}.card .tag{display:inline-block;background:var(--onbg);color:var(--on);border-radius:4px;padding:0 7px;font-size:.75rem;font-weight:700;margin:2px}
+.grade{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.grade button{border:0;border-radius:10px;padding:10px 4px;font-weight:700;cursor:pointer;color:#fff}.grade small{display:block;font-weight:400;opacity:.9;font-size:.75rem}
+.g1{background:#b42318}.g2{background:#b26b00}.g3{background:#1b7a3d}.g4{background:#0e5a63}
+.show{width:100%;margin-top:10px}
+.list{display:grid;gap:6px}
+.it{display:grid;grid-template-columns:auto 1fr auto;gap:2px 12px;align-items:start;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.it .w{font:700 1.5rem/1.2 "Noto Serif SC",serif}.it .py{color:var(--on);font-weight:600}.it .meta{color:var(--mute);font-size:.8rem}
+.it .act{display:flex;gap:4px}.it .act button{border:1px solid var(--line);background:none;color:var(--ink);border-radius:6px;padding:3px 8px;cursor:pointer}
 .it .act .del{color:var(--red)}
-.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:28px 18px;text-align:center;min-height:200px;display:flex;flex-direction:column;justify-content:center;gap:8px;cursor:pointer}
-.card .w{font:700 3rem "Noto Serif SC",serif}.card .hid{visibility:hidden}
+.pill{display:inline-block;border-radius:10px;padding:0 7px;font-size:.72rem;font-weight:700;margin-right:4px}
+.s-n{background:var(--onbg);color:var(--on)}.s-l{background:#fff4d6;color:#8a5a00}.s-m{background:#dcf3e3;color:#1b7a3d}.s-d{background:#fde8e6;color:#b42318}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;margin:10px 0}
+.box h3{margin:0 0 4px}.msg{font-weight:600;color:var(--ok)}
 .empty{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:20px;text-align:center;color:var(--mute)}
+.more{display:block;margin:10px auto}
 :focus-visible{outline:3px solid var(--on);outline-offset:2px}
 footer{color:var(--mute);font-size:.8rem;margin-top:24px}
 </style></head><body>
 <main>
 <a href="/">← Kembali ke pilih level</a>
-<h1>Kosakata tersimpan</h1>
-<p class="note">Kata yang kamu simpan dari subtitle listening. Tersimpan di perangkat ini; unduh CSV untuk cadangan atau untuk dibuka di Excel / Google Sheets.</p>
-<div class="bar"><input id="q" type="search" placeholder="Cari hanzi, pinyin, atau arti…"><button id="fc" type="button">Latihan kartu</button><button class="p" id="csv" type="button">Unduh CSV</button></div>
+<h1>Kosakata & Review</h1>
+<p class="note">Semua kata yang kamu simpan dan kamu impor. Review pakai pengulangan berjarak: kata yang sulit muncul lebih sering, yang sudah hafal muncul lebih jarang.</p>
+<div class="tabs" role="tablist"><button data-tab="rev" class="on">Review<b id="dueb" hidden></b></button><button data-tab="list">Daftar kata</button><button data-tab="io">Impor & ekspor</button></div>
 <div id="out"></div>
-<footer>Arti kata dari CC-CEDICT (CC BY-SA 4.0), dalam bahasa Inggris.</footer>
+<footer>Arti kata dari subtitle memakai CC-CEDICT (CC BY-SA 4.0). Semua kata dan jadwal review tersimpan di perangkat ini; pakai <b>Unduh CSV</b> untuk cadangan.</footer>
 </main>
 <script src="/reader.js"></script>
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let mode='list',fi=0,flip=false;
-function view(){const all=HR.saved(),q=$('#q').value.trim().toLowerCase();
-const L=all.filter(x=>!q||[x.w,x.p,x.d].join(' ').toLowerCase().includes(q));
-if(!all.length){$('#out').innerHTML='<div class="empty">Belum ada kata. Buka subtitle di soal listening, ketuk sebuah kata, lalu tekan <b>＋ Simpan kata</b>.</div>';return}
-if(mode=='card'){if(!L.length){$('#out').innerHTML='<div class="empty">Tidak ada kata untuk pencarian ini.</div>';return}
-fi=(fi+L.length)%L.length;const x=L[fi];
-$('#out').innerHTML=`<div class="card" id="card"><div class="w zh">${esc(x.w)}</div><div class="${flip?'':'hid'}"><div class="py" style="color:var(--on);font-weight:600">${esc(x.p)}</div><div>${esc(x.d)}</div></div><div class="note" style="margin:0">${flip?'':'Ketuk untuk melihat arti'}</div></div>
-<div class="bar" style="justify-content:center"><button id="pv" type="button">← Sebelumnya</button><button id="sp1" type="button">🔊</button><button id="nx" type="button">Berikutnya →</button></div><p class="note" style="text-align:center">${fi+1} / ${L.length}</p>`;
-$('#card').onclick=()=>{flip=!flip;view()};$('#pv').onclick=()=>{fi--;flip=false;view()};$('#nx').onclick=()=>{fi++;flip=false;view()};$('#sp1').onclick=()=>HR.speak(x.w);return}
-$('#out').innerHTML=`<p class="note">${all.length} kata tersimpan${q?` · ${L.length} cocok`:''}</p><div class="list">${L.map(x=>`<div class="it"><div class="w zh">${esc(x.w)}</div><div><div class="py">${esc(x.p)}</div><div class="d">${esc(x.d)}</div><div class="m">${esc(x.src)}${x.date?' · '+esc(x.date):''}</div></div><div class="act"><button data-sp="${esc(x.w)}" type="button">🔊</button><button class="del" data-del="${esc(x.w)}" type="button">Hapus</button></div></div>`).join('')}</div>`}
-$('#out').addEventListener('click',e=>{const s=e.target.dataset.sp,d=e.target.dataset.del;if(s)HR.speak(s);if(d){HR.store(HR.saved().filter(x=>x.w!==d));view()}});
-$('#q').oninput=()=>{fi=0;view()};
-$('#fc').onclick=()=>{mode=mode=='list'?'card':'list';$('#fc').textContent=mode=='list'?'Latihan kartu':'Daftar kata';fi=0;flip=false;view()};
-$('#csv').onclick=()=>{const a=HR.saved();if(!a.length)return;const q=v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
-const csv='﻿'+['hanzi,pinyin,meaning,source,date'].concat(a.map(x=>[x.w,x.p,x.d,x.src,x.date].map(q).join(','))).join('\n');
-const l=document.createElement('a');l.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));l.download='kosakata-hsk.csv';document.body.appendChild(l);l.click();l.remove()};
-view();
+const DAY=864e5,today=()=>{const d=new Date();d.setHours(0,0,0,0);return d.getTime()},ymd=t=>{const d=new Date(t);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const CFGK='hsk-srs-cfg',DAYK='hsk-srs-day';
+const getJ=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},setJ=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert('Penyimpanan perangkat penuh atau diblokir. Unduh CSV sebagai cadangan.')}};
+let cfg=Object.assign({newPerDay:20,dir:'zh',deck:''},getJ(CFGK,{}));
+const W=()=>HR.saved(),save=a=>HR.store(a);
+const decksOf=x=>x.decks&&x.decks.length?x.decks:[x.src?'Dari subtitle':'Lainnya'];
+const inDeck=x=>!cfg.deck||decksOf(x).includes(cfg.deck);
+const isNew=x=>!x.srs;const isDue=x=>x.srs&&x.srs.due<=today();const isMast=x=>x.srs&&x.srs.ivl>=21;
+const stateOf=x=>isNew(x)?['n','Baru']:isDue(x)?['d','Jatuh tempo']:isMast(x)?['m','Hafal']:['l','Belajar'];
+function dayInfo(){const d=getJ(DAYK,{});return d.date===ymd(today())?d:{date:ymd(today()),new:0,done:0}}
+// --- spaced repetition (SM-2 style) ---
+function next(s,g){s=Object.assign({ivl:0,ef:2.5,reps:0,lapses:0},s||{});
+ // intervals for each button, always Lupa < Sulit < Bisa < Mudah
+ const good=s.reps==0?2:s.reps==1?3:Math.round(Math.max(s.ivl,1)*s.ef);
+ const hard=Math.min(Math.max(1,Math.round((s.ivl||1)*1.2)),Math.max(1,good-1));
+ const easy=Math.max(good+1,s.reps==0?4:Math.round(Math.max(s.ivl,1)*s.ef*1.3));
+ if(g==1){s.lapses++;s.reps=0;s.ivl=0;s.ef=Math.max(1.3,s.ef-.2)}
+ else if(g==2){s.ivl=hard;s.ef=Math.max(1.3,s.ef-.15);s.reps++}
+ else if(g==3){s.ivl=good;s.reps++}
+ else{s.ivl=easy;s.ef+=.15;s.reps++}
+ s.due=today()+s.ivl*DAY;s.last=Date.now();return s}
+const lbl=n=>n<1?'hari ini':n==1?'1 hari':n<30?n+' hari':n<365?Math.round(n/30)+' bln':Math.round(n/365)+' thn';
+let tab='rev',Q=[],qi=0,shown=false,sess={done:0,again:0};
+function buildQueue(){const a=W(),di=dayInfo();
+ const due=a.filter(x=>inDeck(x)&&isDue(x)).sort((x,y)=>x.srs.due-y.srs.due);
+ const fresh=a.filter(x=>inDeck(x)&&isNew(x)).slice(0,Math.max(0,cfg.newPerDay-di.new));
+ Q=[...due.map(x=>x.w),...fresh.map(x=>x.w)];qi=0;shown=false}
+function badge(){const n=W().filter(isDue).length;const b=$('#dueb');b.hidden=!n;b.textContent=n}
+function deckSel(){const ds=[...new Set(W().flatMap(decksOf))].sort();return `<select id="deck" aria-label="Deck"><option value="">Semua deck</option>${ds.map(d=>`<option${d==cfg.deck?' selected':''}>${esc(d)}</option>`).join('')}</select>`}
+function stats(){const a=W().filter(inDeck),di=dayInfo();
+ return `<div class="stats"><div class="st"><b>${a.filter(isDue).length}</b>jatuh tempo</div><div class="st"><b>${Math.min(a.filter(isNew).length,Math.max(0,cfg.newPerDay-di.new))}</b>kata baru hari ini</div><div class="st"><b>${a.filter(isMast).length}</b>hafal</div><div class="st"><b>${a.length}</b>total kata</div></div>`}
+function renderRev(){const a=W();
+ if(!a.length){$('#out').innerHTML=`<div class="empty">Belum ada kata. Buka tab <b>Impor & ekspor</b> untuk menambahkan kosakatamu, atau simpan kata dari subtitle listening.</div>`;return}
+ let h=stats()+`<div class="row">${deckSel()}<select id="dir" aria-label="Arah kartu"><option value="zh"${cfg.dir=='zh'?' selected':''}>汉字 → arti</option><option value="en"${cfg.dir=='en'?' selected':''}>arti → 汉字</option></select><select id="npd" aria-label="Kata baru per hari">${[0,10,20,30,50].map(n=>`<option value="${n}"${n==cfg.newPerDay?' selected':''}>${n} kata baru/hari</option>`).join('')}</select></div>`;
+ if(qi>=Q.length){h+=`<div class="empty">${sess.done?`<b>Selesai untuk sekarang!</b> ${sess.done} kartu direview${sess.again?`, ${sess.again} diulang`:''}.<br>`:'Tidak ada kartu untuk direview sekarang. '}Datang lagi besok, atau tambah kata baru per hari.</div>`;$('#out').innerHTML=h;return}
+ const x=a.find(y=>y.w==Q[qi]);if(!x){qi++;return renderRev()}
+ const front=cfg.dir=='zh'?`<div class="w zh">${esc(x.w)}</div>`:`<div class="m">${esc(x.d)}</div>`;
+ const back=`${cfg.dir=='zh'?'':`<div class="w zh">${esc(x.w)}</div>`}<div class="py">${esc(x.p)}</div>${cfg.dir=='zh'?`<div class="m">${esc(x.d)}</div>`:''}${x.src?`<div class="src zh">${esc(x.src)}</div>`:''}<div>${decksOf(x).map(d=>`<span class="tag">${esc(d)}</span>`).join('')}</div>`;
+ h+=`<p class="note" style="text-align:center">${qi+1} / ${Q.length}${isNew(x)?' · kata baru':''}</p><div class="card" id="card">${front}${shown?back:''}</div>`;
+ if(!shown)h+=`<button class="btn p show" id="show" type="button">Lihat jawaban</button>`;
+ else{const pv=g=>lbl(next(x.srs,g).ivl);h+=`<div class="grade"><button class="g1" data-g="1" type="button">Lupa<small>${pv(1)}</small></button><button class="g2" data-g="2" type="button">Sulit<small>${pv(2)}</small></button><button class="g3" data-g="3" type="button">Bisa<small>${pv(3)}</small></button><button class="g4" data-g="4" type="button">Mudah<small>${pv(4)}</small></button></div>`}
+ h+=`<div class="row" style="justify-content:center"><button class="btn" id="spk" type="button">🔊 Dengar</button></div>`;
+ $('#out').innerHTML=h;
+ if(shown&&cfg.dir=='en')HR.speak(x.w)}
+function grade(g){const a=W(),x=a.find(y=>y.w==Q[qi]);if(!x)return;const wasNew=isNew(x);
+ x.srs=next(x.srs,g);save(a);const di=dayInfo();if(wasNew)di.new++;di.done++;setJ(DAYK,di);
+ sess.done++;if(g==1){sess.again++;Q.splice(Math.min(Q.length,qi+5),0,x.w)}
+ qi++;shown=false;badge();renderRev()}
+let lf={q:'',st:'',n:60};
+function renderList(){const a=W();
+ const L=a.filter(x=>inDeck(x)&&(!lf.st||stateOf(x)[0]==lf.st)&&(!lf.q||[x.w,x.p,x.d].join(' ').toLowerCase().includes(lf.q)));
+ let h=`<div class="row"><input id="q" type="search" placeholder="Cari hanzi, pinyin, atau arti…" value="${esc(lf.q)}">${deckSel()}<select id="st" aria-label="Status"><option value="">Semua status</option>${[['n','Baru'],['l','Belajar'],['d','Jatuh tempo'],['m','Hafal']].map(([k,v])=>`<option value="${k}"${k==lf.st?' selected':''}>${v}</option>`).join('')}</select></div><p class="note">${L.length} dari ${a.length} kata</p>`;
+ if(!L.length){$('#out').innerHTML=h+'<div class="empty">Tidak ada kata untuk filter ini.</div>';return}
+ h+=`<div class="list">${L.slice(0,lf.n).map(x=>{const[s,t]=stateOf(x);return `<div class="it"><div class="w zh">${esc(x.w)}</div><div><div class="py">${esc(x.p)}</div><div>${esc(x.d)}</div><div class="meta"><span class="pill s-${s}">${t}</span>${x.srs&&!isDue(x)?'review '+ymd(x.srs.due)+' · ':''}${esc(decksOf(x).join(', '))}${x.src?' · <span class="zh">'+esc(x.src)+'</span>':''}</div></div><div class="act"><button data-sp="${esc(x.w)}" type="button" aria-label="Dengar">🔊</button><button class="del" data-del="${esc(x.w)}" type="button">Hapus</button></div></div>`}).join('')}</div>`;
+ if(L.length>lf.n)h+=`<button class="btn more" id="more" type="button">Tampilkan lebih banyak (${L.length-lf.n} lagi)</button>`;
+ $('#out').innerHTML=h}
+// --- import / export ---
+function parseCSV(t){const rows=[];let r=[],f='',q=false;t=t.replace(/^﻿/,'');
+ for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c=='"'){if(t[i+1]=='"'){f+='"';i++}else q=false}else f+=c}
+  else if(c=='"')q=true;else if(c==','){r.push(f);f=''}else if(c=='\n'||c=='\r'){if(c=='\r'&&t[i+1]=='\n')i++;r.push(f);rows.push(r);r=[];f=''}else f+=c}
+ if(f||r.length){r.push(f);rows.push(r)}return rows.filter(x=>x.some(v=>v.trim()))}
+function spread(state,i){const t=today();if(state=='m'){const ivl=30;return{ivl,ef:2.5,reps:3,lapses:0,due:t+(1+(i*7919)%30)*DAY}}if(state=='l')return{ivl:1,ef:2.5,reps:1,lapses:0,due:t};return null}
+function merge(items,label){const a=W(),have=new Set(a.map(x=>x.w));let add=0,skip=0;
+ items.forEach((it,i)=>{if(!it.w||have.has(it.w)){skip++;return}have.add(it.w);const s=spread(it.state,i);const x={w:it.w,p:it.p||'',d:it.d||'',src:it.src||'',decks:it.decks||[label],lvl:it.lvl||'',date:it.date||ymd(today())};if(s)x.srs=s;a.push(x);add++});
+ save(a);badge();return `✓ ${add} kata ditambahkan${skip?`, ${skip} sudah ada (dilewati)`:''}.`}
+function fromRows(rows,label){const hd=rows[0].map(h=>h.trim().toLowerCase());const ix=k=>hd.findIndex(h=>k.includes(h));
+ const H=ix(['hanzi','word','simplified','汉字','中文']),P=ix(['pinyin']),M=ix(['meaning','definition','english','arti','translation']),S=ix(['state','status']),D=ix(['decks','deck']),Lv=ix(['hsk_level','level','hsk']),Dt=ix(['date_added','date']),Src=ix(['source_story_title','source','sumber']);
+ const hasHead=H>=0;const body=hasHead?rows.slice(1):rows;
+ return body.map(r=>({w:(r[hasHead?H:0]||'').trim(),p:(r[hasHead?P:1]||'').trim(),d:(r[hasHead?M:2]||'').trim(),lvl:Lv>=0?r[Lv]:'',date:Dt>=0?r[Dt]:'',src:Src>=0?r[Src]:'',
+  decks:D>=0&&r[D]?[...new Set(r[D].split(';').map(x=>x.trim().replace(/^hsk/i,'HSK')).filter(Boolean))]:[label],
+  state:S>=0?({mastered:'m',learning:'l',hafal:'m',belajar:'l'}[String(r[S]).trim().toLowerCase()]||'n'):'n'}))}
+function renderIO(msg){const n=W().length;
+ $('#out').innerHTML=`${msg?`<p class="msg">${msg}</p>`:''}
+<div class="box"><h3>Kosakata Dengdeng</h3><p class="note">1.502 kata dari ekspor 30 Oktober 2026 (HSK 1–9, Your words, idiom). Status <b>Mastered</b> dijadwalkan untuk review dalam 30 hari ke depan, <b>Learning</b> langsung masuk review hari ini, <b>Not started</b> menjadi kata baru.</p><button class="btn p" id="dd" type="button">Tambahkan 1.502 kata</button></div>
+<div class="box"><h3>Impor dari file CSV</h3><p class="note">Kolom minimal: <code>hanzi, pinyin, meaning</code>. Kolom <code>state</code>, <code>decks</code>, <code>hsk_level</code>, <code>date_added</code>, dan <code>source_story_title</code> ikut dibaca kalau ada. Kata yang sudah ada dilewati.</p><input type="file" id="file" accept=".csv,text/csv"></div>
+<div class="box"><h3>Ekspor</h3><p class="note">${n} kata di perangkat ini, termasuk jadwal review.</p><div class="row"><button class="btn p" id="csv" type="button">Unduh CSV</button><button class="btn d" id="clr" type="button">Hapus semua kata</button></div></div>`}
+function exportCSV(){const a=W();if(!a.length)return;const q=v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+ const rows=[['hanzi','pinyin','meaning','hsk_level','state','decks','date_added','next_review','interval_days','source_story_title']].concat(a.map(x=>[x.w,x.p,x.d,x.lvl||'',stateOf(x)[1],decksOf(x).join('; '),x.date||'',x.srs?ymd(x.srs.due):'',x.srs?x.srs.ivl:'',x.src||'']));
+ const l=document.createElement('a');l.href=URL.createObjectURL(new Blob(['﻿'+rows.map(r=>r.map(q).join(',')).join('\n')],{type:'text/csv;charset=utf-8'}));l.download='kosakata-hsk-'+ymd(today())+'.csv';document.body.appendChild(l);l.click();l.remove()}
+function render(){document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab==tab));badge();
+ if(tab=='rev')renderRev();else if(tab=='list')renderList();else renderIO()}
+document.querySelector('.tabs').onclick=e=>{const b=e.target.closest('[data-tab]');if(!b)return;tab=b.dataset.tab;if(tab=='rev'){buildQueue();sess={done:0,again:0}}render()};
+$('#out').addEventListener('click',e=>{const t=e.target.closest('button');if(!t)return;
+ if(t.id=='show'){shown=true;renderRev()}else if(t.dataset.g)grade(+t.dataset.g);
+ else if(t.id=='spk'){HR.speak(Q[qi])}else if(t.dataset.sp)HR.speak(t.dataset.sp);
+ else if(t.dataset.del){if(confirm('Hapus '+t.dataset.del+'?')){save(W().filter(x=>x.w!==t.dataset.del));renderList();badge()}}
+ else if(t.id=='more'){lf.n+=100;renderList()}
+ else if(t.id=='csv')exportCSV();
+ else if(t.id=='clr'){if(confirm('Hapus semua kata dan jadwal review di perangkat ini? Ini tidak bisa dibatalkan.')){save([]);renderIO('Semua kata dihapus.');badge()}}
+ else if(t.id=='dd'){t.disabled=true;t.textContent='Menambahkan…';fetch('decks/dengdeng.json').then(r=>r.json()).then(d=>{const F=d.fields;const items=d.words.map(r=>Object.fromEntries(F.map((f,i)=>[f,r[i]])));renderIO(merge(items,'Dengdeng'))}).catch(()=>renderIO('Gagal memuat daftar kata. Periksa koneksi lalu coba lagi.'))}});
+$('#out').addEventListener('change',e=>{const t=e.target;
+ if(t.id=='deck'){cfg.deck=t.value;setJ(CFGK,cfg);if(tab=='rev'){buildQueue()}render()}
+ else if(t.id=='dir'){cfg.dir=t.value;setJ(CFGK,cfg);renderRev()}
+ else if(t.id=='npd'){cfg.newPerDay=+t.value;setJ(CFGK,cfg);buildQueue();renderRev()}
+ else if(t.id=='st'){lf.st=t.value;lf.n=60;renderList()}
+ else if(t.id=='file'&&t.files[0]){const r=new FileReader();r.onload=()=>{const rows=parseCSV(r.result);renderIO(rows.length?merge(fromRows(rows,t.files[0].name.replace(/\.csv$/i,'')),'Impor'):'File kosong atau bukan CSV.')};r.readAsText(t.files[0],'utf-8')}});
+$('#out').addEventListener('input',e=>{if(e.target.id=='q'){lf.q=e.target.value.trim().toLowerCase();lf.n=60;const p=e.target.selectionStart;renderList();const i=$('#q');i.focus();i.setSelectionRange(p,p)}});
+document.addEventListener('keydown',e=>{if(tab!='rev'||e.target.matches('input,select'))return;if(e.key==' '&&!shown){e.preventDefault();shown=true;renderRev()}else if(shown&&'1234'.includes(e.key))grade(+e.key)});
+if(!W().length)tab='io';
+buildQueue();render();
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 </script>
 </body></html>
