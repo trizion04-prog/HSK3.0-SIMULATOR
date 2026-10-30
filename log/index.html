@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8">
+<html lang="id" data-lv="log"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Log Kesalahan</title>
 <link rel="manifest" href="/manifest.webmanifest">
@@ -28,7 +28,8 @@ td:nth-child(1),td:nth-child(2),td:nth-child(9){white-space:nowrap}
 tr.due td{background:var(--due)}td.x button{border:0;background:none;color:var(--red);cursor:pointer;font:inherit}
 .empty{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:20px;text-align:center;color:var(--mute)}
 :focus-visible{outline:3px solid var(--on);outline-offset:2px}
-</style></head><body>
+</style>
+<link rel="stylesheet" href="/theme.css"></head><body>
 <form name="log-kesalahan" data-netlify="true" netlify-honeypot="bot-field" hidden><input name="bot-field"><input name="nama"><input name="level"><input name="tanggal"><input name="jumlah"><textarea name="csv"></textarea></form>
 <main>
 <a href="/">← Kembali ke pilih level</a>

@@ -1,0 +1,86 @@
+/* Colourful theme shared by every page. Loaded after each page's own <style>, so it overrides the base tokens.
+   Each page sets <html data-lv="..."> to pick its accent colour. */
+:root:root{
+  --bg:#fff8f1;--paper:#ffffff;--ink:#1e1b2e;--mute:#665f7a;--line:#ece4f3;
+  --on:#7c3aed;--onbg:#f1eafe;--on2:#ec4899;--red:#e11d48;--ok:#059669;
+  --glow:rgba(124,58,237,.12);
+}
+:root:root[data-lv="1"]{--on:#e11d48;--on2:#f97316;--onbg:#ffe4ea;--glow:rgba(225,29,72,.12)}
+:root:root[data-lv="2"]{--on:#ea580c;--on2:#f59e0b;--onbg:#ffedd5;--glow:rgba(234,88,12,.12)}
+:root:root[data-lv="3"]{--on:#b45309;--on2:#eab308;--onbg:#fef3c7;--glow:rgba(202,138,4,.14)}
+:root:root[data-lv="4"]{--on:#059669;--on2:#22c55e;--onbg:#d1fae5;--glow:rgba(5,150,105,.12)}
+:root:root[data-lv="5"]{--on:#2563eb;--on2:#06b6d4;--onbg:#dbeafe;--glow:rgba(37,99,235,.12)}
+:root:root[data-lv="6"]{--on:#9333ea;--on2:#d946ef;--onbg:#f3e8ff;--glow:rgba(147,51,234,.12)}
+:root:root[data-lv="log"]{--on:#db2777;--on2:#f472b6;--onbg:#fce7f3;--glow:rgba(219,39,119,.12)}
+:root:root[data-lv="kata"]{--on:#0d9488;--on2:#14b8a6;--onbg:#ccfbf1;--glow:rgba(13,148,136,.12)}
+:root:root[data-lv="cert"]{--on:#d97706;--on2:#f59e0b;--onbg:#fef3c7;--glow:rgba(217,119,6,.14)}
+@media (prefers-color-scheme:dark){
+  :root:root:not([data-theme="light"]){--bg:#141024;--paper:#1e1934;--ink:#f1edfb;--mute:#aaa3c4;--line:#342c52;--on:#a78bfa;--onbg:#2d2350;--on2:#f472b6;--red:#fb7185;--ok:#34d399;--glow:rgba(167,139,250,.18)}
+  :root:root:not([data-theme="light"])[data-lv="1"]{--on:#fb7185;--on2:#fdba74;--onbg:#3b1726}
+  :root:root:not([data-theme="light"])[data-lv="2"]{--on:#fb923c;--on2:#fcd34d;--onbg:#3a2112}
+  :root:root:not([data-theme="light"])[data-lv="3"]{--on:#facc15;--on2:#fde68a;--onbg:#3a2f0b}
+  :root:root:not([data-theme="light"])[data-lv="4"]{--on:#34d399;--on2:#86efac;--onbg:#0f3328}
+  :root:root:not([data-theme="light"])[data-lv="5"]{--on:#60a5fa;--on2:#67e8f9;--onbg:#13274a}
+  :root:root:not([data-theme="light"])[data-lv="6"]{--on:#c084fc;--on2:#f0abfc;--onbg:#2e1846}
+  :root:root:not([data-theme="light"])[data-lv="log"]{--on:#f472b6;--on2:#f9a8d4;--onbg:#3b1530}
+  :root:root:not([data-theme="light"])[data-lv="kata"]{--on:#2dd4bf;--on2:#5eead4;--onbg:#0f332f}
+  :root:root:not([data-theme="light"])[data-lv="cert"]{--on:#fbbf24;--on2:#fcd34d;--onbg:#3a2a0c}
+}
+
+/* page background: soft colour blobs */
+body{background:
+  radial-gradient(900px 500px at -10% -10%,var(--glow),transparent 60%),
+  radial-gradient(700px 500px at 110% 10%,rgba(236,72,153,.10),transparent 60%),
+  radial-gradient(800px 600px at 50% 120%,rgba(6,182,212,.10),transparent 60%),
+  var(--bg) fixed}
+
+/* surfaces */
+.paper,.box,.it,.st,.ce,.empty,.tw,.stat,.card:not(.multi):not(a){box-shadow:0 1px 2px rgba(30,27,46,.04),0 6px 18px var(--glow)}
+.paper{border-color:var(--line);border-radius:12px}
+.cover{border-top:6px solid var(--on)}
+.cover h1{background:linear-gradient(90deg,var(--on),var(--on2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.seal{border-color:var(--on2)!important;color:var(--on2)!important}
+
+/* buttons */
+.go,.btn.p,.bar .p,.lg-b .p,.act .p,.hr-pop .b .sv:not(.done),.ce .act .p,dialog .p,.ct-act .go{
+  background:linear-gradient(135deg,var(--on),var(--on2))!important;border:0!important;color:#fff!important;box-shadow:0 4px 14px var(--glow)}
+.go:hover,.btn.p:hover{filter:brightness(1.05)}
+.fin,.btn:not(.p):not(.d){border-color:var(--on);color:var(--on)}
+
+/* test header bar */
+.bar{border-bottom:0!important;box-shadow:0 2px 0 var(--on),0 6px 16px var(--glow)}
+.bar::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,var(--on),var(--on2))}
+.tm{color:var(--on)}
+.chip.done,.ch.on{background:linear-gradient(135deg,var(--on),var(--on2))!important;border-color:transparent!important;color:#fff!important}
+.ch:hover{border-color:var(--on)}
+.blk h2,.paper h2{color:var(--on)}
+.bl{color:var(--on);border-bottom-color:var(--on)!important}
+
+/* tabs / chips on menu pages */
+.tabs button.on{color:var(--on)!important;border-bottom-color:var(--on)!important}
+.tabs button.on[data-l]{background:linear-gradient(135deg,var(--on),var(--on2))!important;color:#fff!important;border-color:transparent!important}
+.stats .st b,.sum .card b{color:var(--on)}
+
+/* ---------- home page ---------- */
+html:not([data-lv]) header h1,:root:root[data-lv="home"] header h1{background:linear-gradient(90deg,#7c3aed,#ec4899 45%,#f97316);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lv .card{position:relative;overflow:hidden;border:0;border-radius:16px;--c1:#7c3aed;--c2:#ec4899;--cb:#f1eafe;
+  background:linear-gradient(160deg,var(--cb),var(--paper) 55%);box-shadow:0 2px 0 var(--c1) inset,0 8px 22px rgba(30,27,46,.08)}
+.lv .card::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:linear-gradient(90deg,var(--c1),var(--c2))}
+.lv .card .big{color:var(--c1)}.lv .card .tag{background:var(--c1);color:#fff}
+.lv .card .go{background:none!important;box-shadow:none!important;color:var(--c1)!important}
+.lv .card .tests a{color:var(--c1);border-color:color-mix(in srgb,var(--c1) 30%,transparent)}
+.lv .card .tests a:hover{background:var(--cb);border-color:var(--c1)}
+.lv .card[href^="hsk1"]{--c1:#e11d48;--c2:#f97316;--cb:#ffe4ea}
+.lv .card[href^="hsk2"]{--c1:#ea580c;--c2:#f59e0b;--cb:#ffedd5}
+.lv .card[href^="hsk3"]{--c1:#b45309;--c2:#eab308;--cb:#fef3c7}
+.lv .card[href^="hsk4"]{--c1:#059669;--c2:#22c55e;--cb:#d1fae5}
+.lv .card.multi{--c1:#2563eb;--c2:#06b6d4;--cb:#dbeafe}
+.lv .card[href^="hsk6"]{--c1:#9333ea;--c2:#d946ef;--cb:#f3e8ff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .lv .card{--cb:color-mix(in srgb,var(--c1) 22%,var(--paper))}
+  :root:not([data-theme="light"]) .lv .card .big,:root:not([data-theme="light"]) .lv .card .go,:root:not([data-theme="light"]) .lv .card .tests a{color:color-mix(in srgb,var(--c1) 55%,#fff)}}
+.logc{border:0!important;border-radius:14px!important;color:#fff!important;box-shadow:0 8px 20px rgba(30,27,46,.12)}
+.logc span{color:rgba(255,255,255,.88)!important}
+.logc[href^="sertifikat"]{background:linear-gradient(135deg,#f59e0b,#ef4444)}
+.logc[href^="log"]{background:linear-gradient(135deg,#ec4899,#8b5cf6)}
+.logc[href^="kata"]{background:linear-gradient(135deg,#14b8a6,#3b82f6)}
+.app{border:0;background:linear-gradient(135deg,var(--onbg),var(--paper));box-shadow:0 6px 18px var(--glow)}

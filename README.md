@@ -83,3 +83,7 @@ Di subtitle listening (HSK 5 mock 1 dan HSK 6) setiap kata bisa diketuk: muncul 
 - Bagian menulis yang tidak bisa dinilai otomatis dinilai mandiri dulu: centang **Sesuai** (HSK 3 no. 66–70, HSK 4 no. 65–69) dan rubrik karangan (jumlah karakter otomatis + topik, tata bahasa, kosakata), lalu **Terbitkan sertifikat**.
 - Sertifikat digambar di canvas (`cert.js`), bisa diunduh sebagai PNG, dan tersimpan di `localStorage` (`hsk-certs`). Semua sertifikat ada di `/sertifikat/`, dikelompokkan per level HSK.
 - Pengaturan bagian per halaman ada di panggilan `CERT.setup(...)` di setiap `index.html` (dibuat oleh `certpatch.py` di folder kerja).
+
+## Tema warna
+
+`theme.css` dipakai semua halaman (setelah `<style>` bawaan halaman). Setiap halaman punya warna aksen sendiri lewat `<html data-lv="...">`: HSK 1 merah muda, HSK 2 oranye, HSK 3 kuning, HSK 4 hijau, HSK 5 biru, HSK 6 ungu, Log pink, Kosakata toska, Sertifikat emas. Mode gelap ikut otomatis.
