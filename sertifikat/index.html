@@ -30,17 +30,26 @@ h2{font-size:1.1rem;margin:22px 0 8px}
 dialog{border:0;border-radius:12px;padding:0;max-width:min(94vw,560px);background:var(--paper)}dialog::backdrop{background:rgba(0,0,0,.6)}
 dialog canvas{width:100%;height:auto;display:block}dialog .act{display:flex;gap:8px;padding:10px}dialog button{flex:1;font:inherit;font-weight:700;border-radius:6px;padding:9px;cursor:pointer;border:1px solid var(--on);background:none;color:var(--on)}dialog .p{background:var(--on);color:var(--paper)}
 :focus-visible{outline:3px solid var(--on);outline-offset:2px}
+.ce .act .rvb{border-color:var(--red);color:var(--red)}.ce .act .rvb.clean{border-color:var(--ok);color:var(--ok)}
+dialog.rv{width:min(96vw,680px);max-width:none;max-height:90vh;color:var(--ink)}.rv-h{position:sticky;top:0;background:var(--paper);display:flex;gap:10px;align-items:flex-start;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}
+.rv-h h3{margin:0;font-size:1.1rem}.rv-h p{margin:2px 0 0;color:var(--mute);font-size:.9rem}.rv-h button{flex:0 0 auto;padding:4px 10px}
+.rv-b{padding:12px 16px 18px;display:grid;gap:10px}.rv-b h4{margin:8px 0 0;color:var(--on)}
+.rq{border:1px solid var(--line);border-left:4px solid var(--red);border-radius:8px;padding:10px 12px}.rq .t{margin:4px 0;font-size:1.05rem}.rq .m{color:var(--mute);font-size:.85rem}
+.rq .a{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:4px}.rq .x{color:var(--red);font-weight:700}.rq .y{color:var(--ok);font-weight:700}.rq .w{color:var(--mute);font-size:.88rem;margin-top:4px}
+.rv-b .again{justify-self:start;text-decoration:none;font-weight:700;border-radius:6px;padding:9px 16px;background:var(--on);color:#fff}
 </style>
 <link rel="stylesheet" href="/theme.css"></head><body>
 <main>
 <a href="/">← Kembali ke pilih level</a>
-<h1>🏅 Sertifikat saya</h1>
-<p class="note">Sertifikat latihan dari setiap tes yang kamu selesaikan, per level HSK. Tersimpan di perangkat ini. Unduh gambarnya untuk dibagikan atau disimpan.</p>
+<h1>🏅 Sertifikat &amp; riwayat tes</h1>
+<p class="note">Riwayat dan sertifikat latihan dari setiap tes yang kamu selesaikan, per level HSK. Tekan <b>Review</b> untuk melihat soal mana yang salah. Tersimpan di perangkat ini.</p>
 <div id="stats"></div>
 <div class="tabs" id="tabs"></div>
 <div id="out"></div>
+<dialog id="rv" class="rv"><div class="rv-h"><div id="rvt"></div><button type="button" id="rvx" aria-label="Tutup">✕</button></div><div id="rvb" class="rv-b"></div></dialog>
 <dialog id="dlg"><canvas id="big"></canvas><div class="act"><button class="p" id="bdl" type="button">Unduh</button><button id="bx" type="button">Tutup</button></div></dialog>
 </main>
+<script src="/log.js"></script>
 <script src="/cert.js"></script>
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -54,15 +63,31 @@ function view(){const all=CERT.certs();
  if(!all.length){$('#out').innerHTML='<div class="empty">Belum ada sertifikat. Selesaikan tes HSK mana pun, lengkap atau per bagian (listening, reading, atau menulis), untuk mendapatkan sertifikat latihan.</div>';return}
  const show=(lv?[lv]:levels);
  $('#out').innerHTML=show.map(l=>{const L=all.filter(c=>c.level==l);if(!L.length)return '';
-  return `<h2>HSK ${l} <span class="zh" style="color:var(--mute);font-weight:400">${['','一','二','三','四','五','六'][l]||''}级</span></h2><div class="grid">${L.map(c=>{const pc=Math.round(100*c.total/c.max);return `<div class="ce"><canvas data-id="${c.id}" width="10" height="10" aria-label="Sertifikat ${esc(c.title)}"></canvas><div class="in"><div class="sc ${pc>=60?'pass':''}">${c.total}/${c.max} · ${pc}%</div><div><b>${esc(c.title)}</b> · ${modeLbl(c)}</div><div class="m">${esc(c.name)} · ${new Date(c.date).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div></div><div class="act"><button class="p" data-dl="${c.id}" type="button">Unduh</button><button data-open="${c.id}" type="button">Lihat</button><button class="d" data-del="${c.id}" type="button" aria-label="Hapus">✕</button></div></div>`}).join('')}</div>`}).join('');
+  return `<h2>HSK ${l} <span class="zh" style="color:var(--mute);font-weight:400">${['','一','二','三','四','五','六'][l]||''}级</span></h2><div class="grid">${L.map(c=>{const pc=Math.round(100*c.total/c.max);return `<div class="ce"><canvas data-id="${c.id}" width="10" height="10" aria-label="Sertifikat ${esc(c.title)}"></canvas><div class="in"><div class="sc ${pc>=60?'pass':''}">${c.total}/${c.max} · ${pc}%</div><div><b>${esc(c.title)}</b> · ${modeLbl(c)}</div><div class="m">${esc(c.name)} · ${new Date(c.date).toLocaleString('id-ID',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}</div></div><div class="act"><button class="rvb ${c.miss&&!c.miss.length?'clean':''}" data-rv="${c.id}" type="button">Review${c.miss?` (${c.miss.length})`:''}</button><button class="p" data-dl="${c.id}" type="button">Unduh</button><button data-open="${c.id}" type="button">Lihat</button><button class="d" data-del="${c.id}" type="button" aria-label="Hapus">✕</button></div></div>`}).join('')}</div>`}).join('');
  document.querySelectorAll('.ce canvas').forEach(cv=>CERT.draw(all.find(c=>c.id==cv.dataset.id),cv))}
 $('#tabs').onclick=e=>{const b=e.target.closest('[data-l]');if(b){lv=+b.dataset.l;view()}};
 $('#out').onclick=e=>{const t=e.target,all=CERT.certs();
- const id=t.dataset.dl||t.dataset.open||t.dataset.del||(t.tagName=='CANVAS'&&t.dataset.id);if(!id)return;const c=all.find(x=>x.id==id);
- if(t.dataset.dl)CERT.download(c,t.closest('.ce').querySelector('canvas'));
+ const id=t.dataset.rv||t.dataset.dl||t.dataset.open||t.dataset.del||(t.tagName=='CANVAS'&&t.dataset.id);if(!id)return;const c=all.find(x=>x.id==id);
+ if(t.dataset.rv)review(c);
+ else if(t.dataset.dl)CERT.download(c,t.closest('.ce').querySelector('canvas'));
  else if(t.dataset.del){if(confirm('Hapus sertifikat ini?')){CERT.store(all.filter(x=>x.id!=id));view()}}
  else{const cv=$('#big');CERT.draw(c,cv).then(()=>{$('#bdl').onclick=()=>CERT.download(c,cv);$('#dlg').showModal()})}};
 $('#bx').onclick=()=>$('#dlg').close();
+$('#rvx').onclick=()=>$('#rv').close();
+const ymd=d=>{d=new Date(d);return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)};
+function review(c){
+ let miss=c.miss,old=false;
+ if(!miss){old=true;// tests done before answers were kept: fall back to what was saved in the mistake log that day
+  miss=HSKLog.load().filter(r=>String(r.level).replace(/\D/g,'')==c.level&&r.date==ymd(c.date)).map(r=>{const m=String(r.question).match(/^(\d+)(?: · (.*))?$/)||[];return{q:m[1]||r.question,section:r.section,text:m[2]||'',my:r.my_answer,key:r.correct_answer,why:r.why_I_missed_it,todo:r.what_to_review}})}
+ const pc=Math.round(100*c.total/c.max),url=c.url||`/hsk${c.level}/`;
+ $('#rvt').innerHTML=`<h3>Review · ${esc(c.title)} · ${modeLbl(c)}</h3><p>${new Date(c.date).toLocaleString('id-ID',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'})} · ${c.total}/${c.max} (${pc}%) · ${c.right} benar · ${c.wrong} salah · ${c.skip} kosong</p>`;
+ const groups={};miss.slice().sort((a,b)=>a.q-b.q).forEach(m=>{const k=String(m.section||'Soal').split(' · ')[0];(groups[k]=groups[k]||[]).push(m)});
+ let h='';
+ if(!miss.length)h=old?'<p class="note">Detail jawaban untuk tes ini tidak tersimpan, karena dikerjakan sebelum fitur review ada dan kesalahannya tidak disimpan ke Log kesalahan. Tes berikutnya akan tersimpan otomatis.</p>':'<p class="note">Tidak ada jawaban salah di soal yang dinilai otomatis. Hebat! 🎉</p>';
+ else{if(old)h+='<p class="note">Tes ini dikerjakan sebelum fitur review ada, jadi yang tampil adalah kesalahan yang kamu simpan ke Log kesalahan di hari yang sama.</p>';
+  h+=`<p class="note">${miss.length} soal salah atau kosong.</p>`+Object.entries(groups).map(([k,L])=>`<h4>${esc(k)} · ${L.length}</h4>`+L.map(m=>`<div class="rq"><div class="m">Soal ${esc(m.q)}${m.section?' · '+esc(m.section):''}</div>${m.text?`<div class="t zh">${esc(m.text)}</div>`:''}<div class="a"><span>Jawabanmu: <span class="x">${m.my?esc(m.my)+' ✗':'tidak dijawab'}</span></span><span>Jawaban benar: <span class="y">${esc(m.key)} ✓</span></span></div>${m.why||m.todo?`<div class="w">${m.why?'Kenapa salah: '+esc(m.why):''}${m.why&&m.todo?' · ':''}${m.todo?'Ulang: '+esc(m.todo):''}</div>`:''}</div>`).join('')).join('')}
+ h+=`<a class="again" href="${esc(url)}">Kerjakan lagi tes ini →</a>`;
+ $('#rvb').innerHTML=h;$('#rv').showModal();$('#rvb').scrollTop=0}
 view();
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 </script>

@@ -1,5 +1,5 @@
 // Service worker: makes the site installable and lets visited pages open offline.
-const CACHE = 'hsk-sim-v8';
+const CACHE = 'hsk-sim-v9';
 const CORE = ['/', '/log.js', '/reader.js', '/cert.js', '/theme.css', '/manifest.webmanifest', '/icons/icon-192.png', '/icons/icon-512.png'];
 
 self.addEventListener('install', e => {

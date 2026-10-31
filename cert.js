@@ -7,7 +7,7 @@
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const zc = s => (String(s || '').match(/[㐀-鿿]/g) || []).length;
   const MODE = { full: ['综合', 'Full test', 'Lengkap'], L: ['听力', 'Listening', 'Listening saja'], R: ['阅读', 'Reading', 'Reading saja'], W: ['书写', 'Writing', 'Menulis saja'] };
-  let C = null, mode = 'full', RUB = {};
+  let C = null, mode = 'full', RUB = {}, lastId = null, MISS = null;
 
   const certs = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } };
   const store = a => { try { localStorage.setItem(KEY, JSON.stringify(a)); return true; } catch (e) { return false; } };
@@ -26,7 +26,7 @@
 <p>Selesai mengerjakan, kamu dapat nilai dan sertifikat latihan yang tersimpan di <a href="/sertifikat/">Sertifikat saya</a>.</p></fieldset>`;
   }
   function setMode(m) { mode = m; }
-  function start() { RUB = {}; }
+  function start() { RUB = {}; lastId = null; MISS = null; }
   function first() { return chosen()[0].stage; }
   function after(stage) { const st = chosen().map(s => s.stage).filter(x => x > stage); return st.length ? st[0] : null; }
 
@@ -78,7 +78,8 @@ ${essays.map(it => { const n = zc((typeof A !== 'undefined' ? A : {})[it.n]); re
   function issue(box) {
     const s = compute(), d = new Date();
     const cert = { id: d.getTime().toString(36), date: d.toISOString(), level: C.level, title: C.title, testId: C.testId || '', name: (typeof U !== 'undefined' && U.nama) || '—', mode,
-      rows: s.rows.map(r => ({ zh: r.zh, en: r.en, pts: r.pts })), total: s.total, max: s.max, right: s.right, wrong: s.wrong, skip: s.skip };
+      rows: s.rows.map(r => ({ zh: r.zh, en: r.en, pts: r.pts })), total: s.total, max: s.max, right: s.right, wrong: s.wrong, skip: s.skip, url: location.pathname };
+    if (MISS) cert.miss = MISS; lastId = cert.id;
     const a = certs(); a.unshift(cert); store(a);
     box.innerHTML = `<h2>Sertifikat latihan</h2><div class="ct-img"><canvas></canvas></div>
 <div class="ct-act"><button class="go" type="button" id="ct-dl">Unduh sertifikat</button><a class="ct-link" href="/sertifikat/">Lihat semua sertifikat saya →</a></div>`;
@@ -169,7 +170,13 @@ ${essays.map(it => { const n = zc((typeof A !== 'undefined' ? A : {})[it.n]); re
   function wrapLog() {
     if (!window.HSKLog || HSKLog._ct) return;
     const orig = HSKLog.render; HSKLog._ct = true;
-    HSKLog.render = (host, opt) => orig(host, Object.assign({}, opt, { items: (opt.items || []).filter(it => !C || inChosen(it.q)) }));
+    HSKLog.render = (host, opt) => {
+      const items = (opt.items || []).filter(it => !C || inChosen(it.q));
+      // keep the wrong answers with the certificate so they can be reviewed later from /sertifikat/
+      MISS = items.map(it => ({ q: it.q, section: it.section || '', text: String(it.text || '').slice(0, 240), my: it.my == null ? '' : String(it.my), key: String(it.key ?? '') }));
+      if (lastId) { const a = certs(), c = a.find(x => x.id === lastId); if (c) { c.miss = MISS; store(a); } }
+      return orig(host, Object.assign({}, opt, { items }));
+    };
   }
   document.addEventListener('DOMContentLoaded', wrapLog); wrapLog();
 
