@@ -1,7 +1,7 @@
 /* Colourful theme shared by every page. Loaded after each page's own <style>, so it overrides the base tokens.
    Each page sets <html data-lv="..."> to pick its accent colour. */
 :root:root{
-  --bg:#fff8f1;--paper:#ffffff;--ink:#1e1b2e;--mute:#665f7a;--line:#ece4f3;
+  --bg:#ffffff;--paper:#ffffff;--ink:#1e1b2e;--mute:#665f7a;--line:#ece4f3;
   --on:#7c3aed;--onbg:#f1eafe;--on2:#ec4899;--red:#e11d48;--ok:#059669;
   --glow:rgba(124,58,237,.12);
 }
@@ -27,12 +27,8 @@
   :root:root:not([data-theme="light"])[data-lv="cert"]{--on:#fbbf24;--on2:#fcd34d;--onbg:#3a2a0c}
 }
 
-/* page background: soft colour blobs */
-body{background:
-  radial-gradient(900px 500px at -10% -10%,var(--glow),transparent 60%),
-  radial-gradient(700px 500px at 110% 10%,rgba(236,72,153,.10),transparent 60%),
-  radial-gradient(800px 600px at 50% 120%,rgba(6,182,212,.10),transparent 60%),
-  var(--bg) fixed}
+/* page background: plain */
+body{background:var(--bg)}
 
 /* surfaces */
 .paper,.box,.it,.st,.ce,.empty,.tw,.stat,.card:not(.multi):not(a){box-shadow:0 1px 2px rgba(30,27,46,.04),0 6px 18px var(--glow)}
