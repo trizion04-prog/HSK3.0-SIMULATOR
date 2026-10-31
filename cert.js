@@ -92,47 +92,61 @@ ${essays.map(it => { const n = zc((typeof A !== 'undefined' ? A : {})[it.n]); re
   function fit(g, t, maxW, size, weight, fam) { let s = size; do { g.font = `${weight} ${s}px ${fam}`; s -= 2; } while (g.measureText(t).width > maxW && s > 12); }
   const SANS = '"Public Sans", "Segoe UI", system-ui, sans-serif', ZH = '"Noto Sans SC", "Noto Serif SC", "PingFang SC", "Microsoft YaHei", sans-serif';
   async function draw(c, cv) {
-    try { await Promise.all([document.fonts.load('700 40px "Noto Serif SC"'), document.fonts.load('700 40px "Public Sans"')]); } catch (e) {}
-    const W = 1024, rows = c.rows.length + (c.rows.length > 1 ? 1 : 0), H = 1545 + rows * 118;
-    cv.width = W; cv.height = H; const g = cv.getContext('2d'); g.textAlign = 'center'; g.textBaseline = 'middle';
-    const ORG = '#ef7d17', GOLD = '#e3a733', INK = '#1f2933', MUT = '#6b7280';
-    g.fillStyle = '#f6f8fb'; g.fillRect(0, 0, W, H);
-    g.fillStyle = INK; g.font = `800 64px ${SANS}`; g.fillText('Practice Test Result', W / 2, 70);
-    g.fillStyle = '#fdecc8'; rr(g, W / 2 - 190, 105, 380, 60, 30); g.fill(); g.fillStyle = ORG; g.font = `700 32px ${ZH}`; g.fillText('SIMULASI · 模拟成绩', W / 2, 136);
-    g.fillStyle = '#d3f5dd'; rr(g, 36, 190, W - 72, 200, 26); g.fill();
-    g.fillStyle = '#0b4d33'; fit(g, `${c.total}/${c.max} POINTS`, W - 140, 104, 900, SANS); g.fillText(`${c.total}/${c.max} POINTS`, W / 2, 268);
-    g.fillStyle = '#374151'; g.font = `400 34px ${SANS}`; g.fillText(`${c.mode === 'full' ? 'Full test' : MODE[c.mode][1]} practice completed`, W / 2, 348);
-    const tiles = [['Right', c.right, '#cff3e3', '#17785a'], ['Skip', c.skip, '#e6e9ee', '#374151'], ['Wrong', c.wrong, '#ffd2d2', '#b42318']], tw = (W - 72 - 40) / 3;
-    tiles.forEach(([l, v, bg, fg], i) => { const x = 36 + i * (tw + 20); g.fillStyle = bg; rr(g, x, 415, tw, 130, 20); g.fill(); g.fillStyle = fg; g.font = `500 32px ${SANS}`; g.fillText(l, x + tw / 2, 452); g.fillStyle = INK; g.font = `800 52px ${SANS}`; g.fillText(String(v), x + tw / 2, 506); });
-    // certificate frame
-    const fy = 575, fh = H - fy - 30; g.fillStyle = '#fff'; g.fillRect(40, fy, W - 80, fh);
-    g.strokeStyle = GOLD; g.lineWidth = 5; g.strokeRect(46, fy + 6, W - 92, fh - 12); g.lineWidth = 2; g.strokeRect(60, fy + 20, W - 120, fh - 40);
-    [[60, fy + 20], [W - 60, fy + 20], [60, fy + fh - 20], [W - 60, fy + fh - 20]].forEach(([x, y]) => { g.beginPath(); g.arc(x, y, 18, 0, 7); g.fillStyle = '#fff'; g.fill(); g.stroke(); g.beginPath(); g.arc(x, y, 8, 0, 7); g.stroke(); });
-    g.fillStyle = '#fff'; g.fillRect(W / 2 - 46, fy + 10, 92, 20); g.font = `700 22px ${SANS}`; g.fillStyle = GOLD; g.fillText('◇◇◇', W / 2, fy + 20);
-    let y = fy + 105;
-    g.fillStyle = ORG; g.font = `900 70px ${ZH}`; g.fillText('汉语水平考试', W / 2, y); y += 80;
-    g.font = `800 50px ${SANS}`; g.fillText('Chinese Proficiency Test', W / 2, y); y += 66;
-    g.font = `800 42px ${ZH}`; fit(g, `HSK ${c.level} ${c.mode === 'full' ? '' : MODE[c.mode][0]}模拟成绩报告`, W - 200, 42, 800, ZH); g.fillText(`HSK ${c.level} ${c.mode === 'full' ? '' : MODE[c.mode][0]}模拟成绩报告`, W / 2, y); y += 84;
-    g.textAlign = 'left';
-    const line = (lab, val) => { g.fillStyle = MUT; g.font = `400 34px ${ZH}`; g.fillText(lab, 110, y); const w = g.measureText(lab).width; g.fillStyle = INK; fit(g, val, W - 230 - w, 38, 700, ZH); g.fillText(val, 120 + w, y); y += 64; };
-    line('名字 / Name:', c.name); line('考试 / Test:', `${c.title} · ${c.mode === 'full' ? 'Full test' : MODE[c.mode][1]}`);
-    y += 10; g.textAlign = 'center';
-    const tx = 110, tW = W - 220, cw = tW / 3, hh = 118;
-    const cell = (x, yy, w, h, bg) => { g.fillStyle = bg; g.fillRect(x, yy, w, h); g.strokeStyle = '#f2cf6b'; g.lineWidth = 3; g.strokeRect(x, yy, w, h); };
-    const two = (a, b, x, yy) => { g.fillStyle = INK; g.font = `700 34px ${ZH}`; g.fillText(a, x, yy - 20); g.font = `700 32px ${SANS}`; g.fillText(b, x, yy + 20); };
-    [['部分', 'Section'], ['总分', 'Total Score'], ['得分', 'Your Score']].forEach(([a, b], i) => { cell(tx + i * cw, y, cw, hh, '#fdf3d6'); two(a, b, tx + i * cw + cw / 2, y + hh / 2); });
-    y += hh;
-    const body = c.rows.map(r => [r.zh, r.en, '100', String(r.pts)]); if (c.rows.length > 1) body.push(['总计', 'Total', String(c.max), String(c.total)]);
-    body.forEach(([a, b, t, p]) => { [0, 1, 2].forEach(i => cell(tx + i * cw, y, cw, hh, '#fffaf0')); two(a, b, tx + cw / 2, y + hh / 2); g.font = `700 40px ${SANS}`; g.fillStyle = INK; g.fillText(t, tx + cw * 1.5, y + hh / 2); g.fillText(p, tx + cw * 2.5, y + hh / 2); y += hh; });
-    y += 30; const n = c.right + c.wrong + c.skip, acc = n ? (100 * c.right / n) : 0;
-    g.fillStyle = '#fff6ea'; rr(g, 110, y, W - 220, 74, 37); g.fill();
-    const accTxt = n ? `${c.right}/${n} jawaban benar · Akurasi ${acc.toFixed(2).replace('.', ',')}%` : 'Bagian menulis dinilai mandiri';
-    g.fillStyle = ORG; fit(g, accTxt, W - 260, 34, 700, SANS); g.fillText(accTxt, W / 2, y + 38); y += 124;
-    const pass = c.total >= c.max * .6;
-    g.fillStyle = ORG; g.font = `900 46px ${ZH}`; g.fillText(pass ? '合格 · PASSED' : '练习完成 · KEEP GROWING', W / 2, y); y += 64;
-    g.fillStyle = MUT; g.font = `400 24px ${SANS}`;
-    g.fillText(`Personal practice record · Bukan hasil resmi HSK · ${new Date(c.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`, W / 2, y); y += 36;
-    g.fillText('Nilai per bagian = persentase jawaban benar, dibulatkan. Lulus latihan: ≥ 60%.', W / 2, y);
+    try { await Promise.all([document.fonts.load('900 40px "Noto Serif SC"'), document.fonts.load('700 40px "Noto Serif SC"'), document.fonts.load('700 40px "Public Sans"')]); } catch (e) {}
+    const W = 1400, H = 990; cv.width = W; cv.height = H;
+    const g = cv.getContext('2d'); g.textBaseline = 'middle'; g.textAlign = 'center';
+    const RED = '#9f1d20', GOLD = '#b8892d', INK = '#2a2118', MUT = '#7a6a55', PAPER = '#fdf8ec', SERIF = '"Noto Serif SC", "Songti SC", "SimSun", serif';
+    const LV = ['', '一', '二', '三', '四', '五', '六'][c.level] || c.level, mt = c.mode === 'full' ? ['综合', 'Full test'] : MODE[c.mode];
+    // paper, red band with gold fret pattern, double gold rule
+    g.fillStyle = RED; g.fillRect(24, 24, W - 48, H - 48); g.fillStyle = PAPER; g.fillRect(52, 52, W - 104, H - 104);
+    g.strokeStyle = GOLD; g.lineWidth = 2;
+    const fret = (x, y) => { g.strokeRect(x - 8, y - 8, 16, 16); g.strokeRect(x - 3, y - 3, 6, 6); };
+    for (let x = 38; x <= W - 30; x += 24) { fret(x, 38); fret(x, H - 38); }
+    for (let y = 62; y <= H - 54; y += 24) { fret(38, y); fret(W - 38, y); }
+    g.lineWidth = 3; g.strokeRect(66, 66, W - 132, H - 132); g.lineWidth = 1; g.strokeRect(74, 74, W - 148, H - 148);
+    const dia = (x, y, s) => { g.beginPath(); g.moveTo(x, y - s); g.lineTo(x + s, y); g.lineTo(x, y + s); g.lineTo(x - s, y); g.closePath(); g.fill(); };
+    g.fillStyle = GOLD; [[66, 66], [W - 66, 66], [66, H - 66], [W - 66, H - 66]].forEach(([x, y]) => dia(x, y, 12));
+    // watermark
+    g.save(); g.globalAlpha = .05; g.fillStyle = RED; g.font = `900 360px ${SERIF}`; g.fillText('模拟', W / 2, H / 2 + 50); g.restore();
+    // heading
+    g.fillStyle = RED; g.font = `900 66px ${SERIF}`; g.fillText('汉语水平考试', W / 2, 140);
+    g.fillStyle = INK; g.font = `700 32px ${SERIF}`; g.fillText('HSK 模拟考试 · 成绩证书', W / 2, 204);
+    g.fillStyle = MUT; g.font = `700 20px ${SANS}`; g.fillText('CHINESE PROFICIENCY TEST  ·  PRACTICE SCORE CERTIFICATE', W / 2, 244);
+    g.strokeStyle = GOLD; g.lineWidth = 2; g.beginPath(); g.moveTo(300, 278); g.lineTo(W / 2 - 22, 278); g.moveTo(W / 2 + 22, 278); g.lineTo(W - 300, 278); g.stroke(); g.fillStyle = GOLD; dia(W / 2, 278, 9);
+    // candidate details
+    g.textAlign = 'left'; let y = 340; const x0 = 120, vx = x0 + 180, vw = 720 - vx;
+    [['姓名', 'Name', c.name], ['等级', 'Level', `HSK ${LV}级 · Level ${c.level}`], ['考试', 'Test', c.title], ['类型', 'Section', `${mt[0]} · ${mt[1]}`],
+     ['日期', 'Date', new Date(c.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })], ['编号', 'No.', 'SIM-' + c.id.toUpperCase()]].forEach(([zh, en, v]) => {
+      g.fillStyle = INK; g.font = `700 24px ${SERIF}`; g.fillText(zh, x0, y - 8); g.fillStyle = MUT; g.font = `500 16px ${SANS}`; g.fillText(en, x0, y + 18);
+      g.fillStyle = INK; fit(g, String(v), vw, 28, 700, SERIF); g.fillText(String(v), vx, y);
+      g.strokeStyle = '#e3d4b4'; g.lineWidth = 1; g.beginPath(); g.moveTo(vx, y + 26); g.lineTo(720, y + 26); g.stroke(); y += 66; });
+    // score table
+    const tx = 790, cw = [250, 120, 120], th = 54, rh = 58; y = 316;
+    const row = (cells, h, bg, fg, font) => { let x = tx; cells.forEach((t, i) => { g.fillStyle = bg; g.fillRect(x, y, cw[i], h); g.strokeStyle = GOLD; g.lineWidth = 1.5; g.strokeRect(x, y, cw[i], h);
+      g.fillStyle = fg; g.textAlign = i ? 'center' : 'left'; fit(g, t, cw[i] - 24, +font.split(' ')[1], font.split(' ')[0], i ? SANS : SERIF); g.fillText(t, i ? x + cw[i] / 2 : x + 16, y + h / 2); x += cw[i]; }); y += h; };
+    row(['科目 Section', '满分 Max', '成绩 Score'], th, RED, '#fff', '700 20');
+    c.rows.forEach((r, i) => row([`${r.zh} ${r.en}`, '100', String(r.pts)], rh, i % 2 ? '#f7eedb' : '#fffaf0', INK, '700 24'));
+    if (c.rows.length > 1) row(['总分 Total', String(c.max), String(c.total)], rh, '#f1dfb4', RED, '800 26');
+    const pct = Math.round(100 * c.total / c.max), pass = c.total >= c.max * .6;
+    g.textAlign = 'center'; g.fillStyle = RED; g.font = `900 64px ${SANS}`; g.fillText(`${c.total} / ${c.max}`, tx + 245, y + 60);
+    g.fillStyle = MUT; g.font = `500 20px ${SANS}`; g.fillText(`${pct}% · lulus latihan ≥ 60%`, tx + 245, y + 106);
+    // result + accuracy
+    g.textAlign = 'left'; g.fillStyle = RED; fit(g, pass ? '合格 · PASSED' : '继续努力 · KEEP PRACTISING', 600, 44, 900, SERIF); g.fillText(pass ? '合格 · PASSED' : '继续努力 · KEEP PRACTISING', x0, 780);
+    const n = c.right + c.wrong + c.skip;
+    g.fillStyle = MUT; g.font = `500 20px ${SANS}`; g.fillText(n ? `${c.right} benar · ${c.wrong} salah · ${c.skip} kosong dari ${n} soal` : 'Bagian menulis dinilai mandiri', x0, 828);
+    // signature
+    g.textAlign = 'center'; g.strokeStyle = INK; g.lineWidth = 1.5; g.beginPath(); g.moveTo(760, 830); g.lineTo(1020, 830); g.stroke();
+    g.fillStyle = INK; g.font = `italic 700 28px ${SANS}`; g.fillText('HSK Simulator', 890, 806); g.fillStyle = MUT; g.font = `500 16px ${SANS}`; g.fillText('模拟考试系统 · Practice system', 890, 852);
+    // practice stamp
+    const sx = 1180, sy = 800, sr = 82; g.save(); g.globalAlpha = .85; g.strokeStyle = g.fillStyle = '#c8202a';
+    g.lineWidth = 5; g.beginPath(); g.arc(sx, sy, sr, 0, 7); g.stroke(); g.lineWidth = 1.5; g.beginPath(); g.arc(sx, sy, sr - 10, 0, 7); g.stroke();
+    g.beginPath(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 11 : 26; g.lineTo(sx + r * Math.cos(a), sy + r * Math.sin(a)); } g.closePath(); g.fill();
+    const arc = (t, mid, span, r, dir) => [...t].forEach((ch, i) => { const a = mid + dir * (i / (t.length - 1) - .5) * span; g.save(); g.translate(sx + r * Math.cos(a), sy + r * Math.sin(a)); g.rotate(a + dir * Math.PI / 2); g.fillText(ch, 0, 0); g.restore(); });
+    g.font = `900 22px ${SERIF}`; arc('模拟练习专用章', -Math.PI / 2, Math.PI * .95, sr - 28, 1);
+    g.font = `800 13px ${SANS}`; arc('PRACTICE ONLY', Math.PI / 2, Math.PI * .7, sr - 24, -1); g.restore();
+    // disclaimer
+    g.fillStyle = MUT; fit(g, 'Sertifikat latihan dari HSK Simulator · Bukan sertifikat resmi HSK dan tidak berlaku sebagai bukti kemampuan bahasa Mandarin.', W - 220, 17, 500, SANS);
+    g.fillText('Sertifikat latihan dari HSK Simulator · Bukan sertifikat resmi HSK dan tidak berlaku sebagai bukti kemampuan bahasa Mandarin.', W / 2, 896);
   }
   function download(c, cv) {
     const a = document.createElement('a'); a.download = `sertifikat-hsk${c.level}-${(c.name || 'latihan').replace(/\W+/g, '-').toLowerCase()}-${c.date.slice(0, 10)}.png`;
