@@ -58,7 +58,7 @@ Di halaman hasil setiap ujian, semua soal yang salah masuk ke daftar **Log kesal
 
 Transkrip listening mock test 1 (dari 听力文本) ada di `hsk5/mock1/transcript.json`: `q` = nomor soal, `spk` = 男/女/问, `s`/`e` = detik di audio (null kalau audionya belum ada).
 Di halaman ujian setiap soal listening punya tombol **Tampilkan subtitle** sendiri; di halaman hasil ada **Review listening** dengan audio yang bisa diputar ulang.
-Waktu subtitle soal 1–16 disinkronkan otomatis dengan speech recognition. Audio soal 17–35 belum tersedia.
+Audio `listening.mp3` sudah lengkap untuk soal 1–35 (sekitar 28 menit). Waktu subtitle soal 1–16 disinkronkan dengan speech recognition; soal 17–35 disinkronkan dari jeda hening di audio, dan teks bacaan panjang dipecah per kalimat.
 
 ## Subtitle interaktif & kosakata
 
